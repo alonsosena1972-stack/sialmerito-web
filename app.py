@@ -59,7 +59,7 @@ if 'registro_completado' not in st.session_state:
 
 if not st.session_state.registro_completado:
     st.markdown("### Registro de Aspirante Certificado")
-    st.info("Por favor, ingresa tus datos reales para recibir orientación precisa sobre los concursos de méritos.")
+    st.info("Por favor, ingresa tus datos para recibir orientación precisa sobre los concursos de méritos.")
     
     with st.form("registro_profesional"):
         nombre = st.text_input("Nombres y Apellidos Completos:")
@@ -77,7 +77,7 @@ if not st.session_state.registro_completado:
                 st.session_state.registro_completado = True
                 st.rerun()
             else:
-                st.warning("⚠️ Todos los campos son obligatorios para validar tu identidad.")
+                st.warning("⚠️ Todos los campos son obligatorios.")
 
 else:
     # --- INTERFAZ DE CHAT ---
@@ -88,7 +88,7 @@ else:
 
     if "messages" not in st.session_state:
         st.session_state.messages = [
-            {"role": "system", "content": f"Eres el consultor experto de SÍ AL MÉRITO. Atiendes a {st.session_state.nombre_usuario}. Tu especialidad son los concursos de la CNSC y la Procuraduría. Ofrece asesoría personalizada por $120.000 COP."}
+            {"role": "system", "content": "Eres el consultor experto de SÍ AL MÉRITO. Atiendes de forma profesional. Ofrece asesoría por $120.000 COP."}
         ]
 
     for message in st.session_state.messages:
@@ -98,33 +98,32 @@ else:
 
     if prompt := st.chat_input("Escribe tu duda legal o técnica..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
+        with st.chat_message("user"): st.markdown(prompt)
         with st.chat_message("assistant"):
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=st.session_state.messages
-            )
+            response = client.chat.completions.create(model="gpt-3.5-turbo", messages=st.session_state.messages)
             full_res = response.choices[0].message.content
             st.markdown(full_res)
             st.session_state.messages.append({"role": "assistant", "content": full_res})
 
-    # --- ZONA DEL DIRECTOR (Solo César) ---
+    # --- PANEL DEL DIRECTOR (CON CLAVE) ---
     st.sidebar.markdown("---")
-    st.sidebar.markdown("### Panel del Director")
-    if st.sidebar.checkbox("Ver Base de Datos"):
+    st.sidebar.markdown("### 🔐 Acceso Privado")
+    password = st.sidebar.text_input("Clave de Administrador:", type="password")
+
+    # AQUÍ PUEDES CAMBIAR 'admin123' POR LA CLAVE QUE TÚ QUIERAS
+    if password == "admin123": 
+        st.sidebar.success("Acceso Concedido")
         if os.path.isfile(DB_FILE):
             df_mostrar = pd.read_csv(DB_FILE)
             st.sidebar.write(f"Total registros: {len(df_mostrar)}")
-            
-            # Botón para descargar el Excel
             csv = df_mostrar.to_csv(index=False).encode('utf-8')
             st.sidebar.download_button(
-                label="📥 Descargar Base de Datos",
+                label="📥 Descargar Excel",
                 data=csv,
                 file_name=f"Base_Datos_SiAlMerito_{datetime.now().strftime('%Y%m%d')}.csv",
                 mime="text/csv",
             )
         else:
-            st.sidebar.write("Aún no hay registros.")
+            st.sidebar.write("No hay registros aún.")
+    elif password != "":
+        st.sidebar.error("Clave Incorrecta")
