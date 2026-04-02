@@ -1,134 +1,102 @@
 import streamlit as st
-from openai import OpenAI
-from PIL import Image
-import pandas as pd
-from datetime import datetime
+import json
 import os
 
 # Configuración de la página
-st.set_page_config(page_title="SÍ AL MÉRITO - Registro Oficial", page_icon="⚖️", layout="centered")
+st.set_page_config(page_title="SÍ AL MÉRITO - Plataforma de Entrenamiento", layout="wide")
 
-# Archivo donde se guardará la base de datos (Usamos punto y coma para que Excel lo abra en columnas)
-# Archivo donde se guardará la base de datos (Usamos punto y coma para que Excel lo abra en columnas)
-  # Archivo oficial de captación de clientes
-DB_FILE = "base_datos_sialmerito_v1.csv"
+# --- FUNCIONES DE CARGA ---
+def cargar_preguntas():
+    if os.path.exists('preguntas.json'):
+        with open('preguntas.json', 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return None
 
-# --- CONFIGURACIÓN DE COLORES Y ESTILOS ---
+# --- ESTILOS PERSONALIZADOS ---
 st.markdown("""
     <style>
-    h1 { color: #2E8B57 !important; text-align: center; font-weight: bold; }
-    h3 { color: #2E8B57 !important; text-align: center; }
-    .stButton>button {
-        background-color: #2E8B57 !important;
-        color: white !important;
-        border-radius: 12px;
-        width: 100%;
-        font-weight: bold;
-    }
+    .main { background-color: #f5f7f9; }
+    .stRadio > label { font-weight: bold; color: #1e3d59; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- CARGAR LOGO ---
-try:
-    image = Image.open('logo.png')
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.image(image, use_column_width=True)
-except:
-    pass
-
-st.markdown("# Inicia tu camino al éxito con SÍ AL MÉRITO")
-
-# --- FUNCIONES DE BASE DE DATOS ---
-def guardar_datos(nombre, documento, celular, nivel):
-    ahora = datetime.now()
-    nueva_fila = {
-        "Día": ahora.strftime("%d"),
-        "Mes": ahora.strftime("%m"),
-        "Año": ahora.strftime("%Y"),
-        "Hora": ahora.strftime("%H:%M:%S"),
-        "Nombres y Apellidos": nombre,
-        "Documento de Identidad": documento,
-        "Número Celular": celular,
-        "Nivel de Interés": nivel
-    }
-    df_nuevo = pd.DataFrame([nueva_fila])
+# --- BARRA LATERAL ---
+with st.sidebar:
+    # Intentamos cargar logo.png o logo.jpeg
+    if os.path.exists("logo.png"):
+        st.image("logo.png", width=200)
+    elif os.path.exists("logo.jpeg"):
+        st.image("logo.jpeg", width=200)
     
-    # Guardamos con separador punto y coma (;) para que Excel en español lo abra directo en celdas
-    if not os.path.isfile(DB_FILE):
-        df_nuevo.to_csv(DB_FILE, index=False, encoding='utf-8-sig', sep=';')
-    else:
-        df_nuevo.to_csv(DB_FILE, mode='a', header=False, index=False, encoding='utf-8-sig', sep=';')
+    st.title("SÍ AL MÉRITO")
+    st.write("Socio Estratégico: César Padilla")
+    st.markdown("---")
+    opcion = st.sidebar.radio(
+        "Selecciona una sección:",
+        ["🤖 Asistente IA", "📝 Simulacro Gratuito", "🏆 Zona Premium"]
+    )
+    st.markdown("---")
+    st.caption("Versión 2.0 - 2026")
 
-# --- LÓGICA DE NAVEGACIÓN ---
-if 'registro_completado' not in st.session_state:
-    st.session_state.registro_completado = False
+# --- SECCIÓN: ASISTENTE IA ---
+if opcion == "🤖 Asistente IA":
+    st.header("🤖 Consultoría Estratégica con IA")
+    st.info("Hola César, estoy listo para asesorarte en tus proyectos legales.")
+    # Espacio para tu chat anterior
 
-if not st.session_state.registro_completado:
-    st.markdown("### Registro de Aspirante Certificado")
-    with st.form("registro_profesional"):
-        nombre = st.text_input("Nombres y Apellidos Completos:")
-        documento = st.text_input("Documento de Identidad (C.C):")
-        celular = st.text_input("Número de Celular / WhatsApp:")
-        nivel = st.selectbox("Nivel de Interés:", ["Asistencial", "Técnico", "Profesional"])
-        btn_registro = st.form_submit_button("REGISTRARME Y EMPEZAR CONSULTA")
+# --- SECCIÓN: SIMULACRO GRATUITO ---
+elif opcion == "📝 Simulacro Gratuito":
+    st.header("📝 Entrenamiento de Juicio Situacional")
+    st.markdown("Analiza cada caso con detenimiento. ¡Mucho éxito!")
+    
+    datos = cargar_preguntas()
+    
+    if datos:
+        preguntas = datos['simulacro_gratis']
+        respuestas_usuario = {}
         
-        if btn_registro:
-            if nombre and documento and celular:
-                guardar_datos(nombre, documento, celular, nivel)
-                st.session_state.nombre_usuario = nombre
-                st.session_state.nivel_usuario = nivel
-                st.session_state.registro_completado = True
-                st.rerun()
-            else:
-                st.warning("⚠️ Todos los campos son obligatorios.")
-else:
-    # --- INTERFAZ DE CHAT ---
-    st.markdown(f"### Bienvenido, {st.session_state.nombre_usuario}")
-    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-
-    if "messages" not in st.session_state:
-        st.session_state.messages = [{"role": "system", "content": "Eres el experto de SÍ AL MÉRITO."}]
-
-    for message in st.session_state.messages:
-        if message["role"] != "system":
-            with st.chat_message(message["role"]): st.markdown(message["content"])
-
-    if prompt := st.chat_input("Escribe tu duda..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"): st.markdown(prompt)
-        with st.chat_message("assistant"):
-            response = client.chat.completions.create(model="gpt-3.5-turbo", messages=st.session_state.messages)
-            res = response.choices[0].message.content
-            st.markdown(res)
-            st.session_state.messages.append({"role": "assistant", "content": res})
-
-  # --- PANEL DEL DIRECTOR FINAL (SÍ AL MÉRITO) ---
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### 🔐 Acceso Privado")
-    
-    # El 'key' asegura que Streamlit no se confunda
-    password = st.sidebar.text_input("Clave de Administrador:", type="password", key="admin_final")
-
-    if password == "admin123": 
-        st.sidebar.success("Acceso Concedido")
-        if os.path.isfile(DB_FILE):
-            try:
-                # Leemos la base que ya vimos que funciona bien (con punto y coma)
-                df_mostrar = pd.read_csv(DB_FILE, sep=';', on_bad_lines='skip')
-                st.sidebar.write(f"Registros actuales: {len(df_mostrar)}")
+        # Mostrar preguntas
+        for p in preguntas:
+            with st.container():
+                st.subheader(f"Pregunta {p['id']}: {p['tema']}")
+                st.write(p['contexto'])
                 
-                # Preparamos la descarga con el título que te gustó
-                csv_data = "BASE DE DATOS PARA SERVICIOS DE ASESORIA PERSONALIZADA - SÍ AL MÉRITO\n"
-                csv_data += df_mostrar.to_csv(index=False, sep=';', encoding='utf-8-sig')
+                ops = [f"A. {p['opciones']['A']}", 
+                       f"B. {p['opciones']['B']}", 
+                       f"C. {p['opciones']['C']}"]
                 
-                st.sidebar.download_button(
-                    label="📥 Descargar Excel Profesional",
-                    data=csv_data,
-                    file_name="Base_Datos_SiAlMerito.csv",
-                    mime="text/csv",
+                respuestas_usuario[p['id']] = st.radio(
+                    f"Tu elección para la pregunta {p['id']}:", 
+                    ops, 
+                    key=f"p_{p['id']}"
                 )
-            except:
-                st.sidebar.error("Error al leer los datos. Registra un nuevo usuario.")
+                st.markdown("---")
+        
+        if st.button("Finalizar y Ver Calificación"):
+            aciertos = 0
+            for p in preguntas:
+                # Obtenemos la letra seleccionada (A, B o C)
+                seleccion = respuestas_usuario[p['id']][0]
+                if seleccion == p['correcta']:
+                    aciertos += 1
+            
+            puntaje = (aciertos / len(preguntas)) * 100
+            st.success(f"### Tu Puntaje Final: {puntaje}/100")
+            
+            if puntaje >= 70:
+                st.balloons()
+                st.markdown("### 🏆 ¡Excelente nivel!")
+            else:
+                st.warning("Buen intento. Repasa los sustentos legales para mejorar.")
+
+# --- SECCIÓN: PREMIUM ---
+elif opcion == "🏆 Zona Premium":
+    st.header("🚀 Entrenamiento de Alto Rendimiento (Premium)")
+    st.write("Accede a simulacros de 50 preguntas con cronómetro de 3 minutos.")
+    
+    codigo = st.text_input("Introduce tu código de acceso:", type="password")
+    if st.button("Validar Acceso"):
+        if codigo == "MERITO2026":
+            st.success("¡Acceso concedido, Director César! Cargando simulador profesional...")
         else:
-            st.sidebar.info("Aún no hay registros en esta base de datos.")
+            st.error("Código incorrecto. Solicita tu acceso en SÍ AL MÉRITO.")
