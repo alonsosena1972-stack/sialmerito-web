@@ -1,6 +1,31 @@
 import streamlit as st
 from openai import OpenAI
-
+# --- CONFIGURACIÓN DE COLORES SÍ AL MÉRITO ---
+st.markdown("""
+    <style>
+    /* Color del título principal */
+    h1 {
+        color: #2E8B57 !important; 
+        font-weight: bold;
+    }
+    /* Color de los subtítulos */
+    h3 {
+        color: #2E8B57 !important;
+    }
+    /* Color del botón principal */
+    .stButton>button {
+        background-color: #2E8B57 !important;
+        color: white !important;
+        border-radius: 10px;
+        border: none;
+    }
+    /* Color al pasar el mouse por el botón */
+    .stButton>button:hover {
+        background-color: #1e5d3a !important;
+        color: white !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 # 1. Configuración de Marca
 st.set_page_config(page_title="SÍ AL MÉRITO - Asesoría Virtual", page_icon="🏛️")
 
