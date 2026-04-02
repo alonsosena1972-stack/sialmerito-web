@@ -81,6 +81,8 @@ if pregunta:
                     )
                     st.write(chat_completion.choices[0].message.content)
                 except Exception as e:
-                    st.error("No pude conectar. Por favor, intenta de nuevo.")
+                    except Exception as e:
+    st.error(f"Error detectado: {e}")
+    st.info("Revisa si tu API Key en 'Secrets' de Streamlit es correcta.")
     else:
         st.error("La IA no está configurada.")
