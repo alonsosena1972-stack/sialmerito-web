@@ -10,7 +10,8 @@ st.set_page_config(page_title="SÍ AL MÉRITO - Registro Oficial", page_icon="�
 
 # Archivo donde se guardará la base de datos (Usamos punto y coma para que Excel lo abra en columnas)
 # Archivo donde se guardará la base de datos (Usamos punto y coma para que Excel lo abra en columnas)
-DB_FILE = "usuarios_si_al_merito.csv"  
+  # Archivo oficial de captación de clientes
+DB_FILE = "base_datos_sialmerito_v1.csv"
 
 # --- CONFIGURACIÓN DE COLORES Y ESTILOS ---
 st.markdown("""
@@ -123,3 +124,32 @@ else:
                 file_name=f"Base_Datos_SiAlMerito.csv",
                 mime="text/csv",
             )
+# --- PANEL DEL DIRECTOR (SÍ AL MÉRITO) ---
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 🔐 Acceso Privado")
+    password = st.sidebar.text_input("Clave de Administrador:", type="password")
+
+    if password == "admin123": 
+        st.sidebar.success("Acceso Concedido")
+        # Cambiamos el nombre aquí también para forzar la creación de la nueva base
+        DB_NUEVA = "base_datos_oficial_v2.csv" 
+        
+        if os.path.isfile(DB_NUEVA):
+            try:
+                # El comando 'on_bad_lines' evita que la app se caiga si hay errores
+                df_mostrar = pd.read_csv(DB_NUEVA, sep=';', on_bad_lines='skip')
+                st.sidebar.write(f"Registros actuales: {len(df_mostrar)}")
+                
+                csv_data = "BASE DE DATOS PARA SERVICIOS DE ASESORIA PERSONALIZADA - SÍ AL MÉRITO\n"
+                csv_data += df_mostrar.to_csv(index=False, sep=';', encoding='utf-8-sig')
+                
+                st.sidebar.download_button(
+                    label="📥 Descargar Excel Profesional",
+                    data=csv_data,
+                    file_name="Base_Datos_SiAlMerito.csv",
+                    mime="text/csv",
+                )
+            except Exception as e:
+                st.sidebar.error("Iniciando nueva base de datos...")
+        else:
+            st.sidebar.info("Esperando el primer registro de hoy.")
