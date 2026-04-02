@@ -4,96 +4,83 @@ import pandas as pd
 from io import BytesIO
 
 # 1. Configuración de la página
-st.set_page_config(page_title="SÍ AL MÉRITO - Plataforma Oficial", layout="wide")
+st.set_page_config(page_title="SÍ AL MÉRITO - Oficial", layout="wide")
 
-# 2. Inicialización de la IA con manejo seguro de errores
-def inicializar_alonso():
-    try:
-        return OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-    except:
-        return None
+# 2. Conexión Directa y Robusta
+# Intentamos obtener la llave de los Secrets
+try:
+    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+except Exception as e:
+    st.error("Error: No se encontró la llave de acceso (API Key) en los Secrets de Streamlit.")
+    client = None
 
-client = inicializar_alonso()
+# 3. Almacenamiento de registros
+if 'lista_registros' not in st.session_state:
+    st.session_state['lista_registros'] = []
 
-# 3. Base de datos temporal para el Excel
-if 'registros' not in st.session_state:
-    st.session_state['registros'] = []
-
-# 4. Barra Lateral (Acceso Privado y Descarga de Excel)
+# 4. Barra Lateral
 with st.sidebar:
-    st.markdown("### 🔐 Acceso Privado")
-    clave = st.text_input("Clave de Administrador:", type="password")
+    st.markdown("### 🔐 Panel Director")
+    pass_admin = st.text_input("Contraseña:", type="password")
     
-    if clave == st.secrets.get("CLAVE_DIRECTOR", "ADMIN2026"):
-        st.success("Acceso Concedido")
-        
-        if st.session_state['registros']:
-            df = pd.DataFrame(st.session_state['registros'])
+    if pass_admin == st.secrets.get("CLAVE_DIRECTOR", "ADMIN2026"):
+        st.success("Acceso Maestro")
+        if st.session_state['lista_registros']:
+            df = pd.DataFrame(st.session_state['lista_registros'])
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                df.to_excel(writer, index=False, sheet_name='Alumnos_Registrados')
-            
-            st.download_button(
-                label="📥 Descargar Excel de Registros",
-                data=output.getvalue(),
-                file_name="Registros_SiAlMerito.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
-        else:
-            st.info("Aún no hay nuevos registros para descargar.")
+                df.to_excel(writer, index=False)
+            st.download_button("📥 Descargar Excel", data=output.getvalue(), file_name="registros.xlsx")
     else:
-        st.info("Introduce tu clave para ver el panel de control.")
+        st.info("Ingresa clave para descargar datos.")
 
-# 5. Encabezado Principal
-col1, col2, col3 = st.columns([2, 1, 2]) 
+# 5. Interfaz Visual (Logo pequeño)
+col1, col2, col3 = st.columns([2, 1, 2])
 with col2:
-    st.image("logo.png", width=150)
+    st.image("logo.png", width=120)
 
-st.markdown("<h1 style='text-align: center; color: #1e7e34;'>Inicia tu camino al éxito con SÍ AL MÉRITO</h1>", unsafe_allow_html=True)
-st.markdown("<h3 style='text-align: center;'>Bienvenido, Cesar Alonso Padilla</h3>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: #1e7e34;'>SÍ AL MÉRITO: Tu Carrera Administrativa</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Bienvenido, Cesar Alonso Padilla</p>", unsafe_allow_html=True)
 
-st.write("---")
-
-# 6. SECCIÓN RECUPERADA: Formulario de Registro
-st.markdown("### 📋 Diagnóstico Inicial Gratuito")
-st.write("Por favor, regístrate para recibir asesoría personalizada.")
-
-with st.form("formulario_registro"):
-    nombre = st.text_input("Nombre Completo:")
-    whatsapp = st.text_input("WhatsApp de contacto (ej: +57):")
-    nivel = st.selectbox("¿A qué nivel aspiras?", ["Asistencial", "Técnico", "Profesional"])
-    
-    boton_registro = st.form_submit_button("REGISTRAR MIS DATOS")
-    
-    if boton_registro:
-        if nombre and whatsapp:
-            st.session_state['registros'].append({"Nombre": nombre, "WhatsApp": whatsapp, "Nivel": nivel})
-            st.success(f"¡Excelente {nombre}! Tus datos han sido guardados. Ahora puedes consultar a Alonso abajo.")
-        else:
-            st.error("Por favor completa tu nombre y WhatsApp para continuar.")
+# 6. FORMULARIO DE REGISTRO (Recuperado)
+with st.expander("📝 REGISTRO DE ASPIRANTE (Haz clic aquí para registrarte)", expanded=True):
+    with st.form("reg_form"):
+        nom = st.text_input("Nombre Completo:")
+        wa = st.text_input("WhatsApp (+57):")
+        niv = st.selectbox("Nivel:", ["Asistencial", "Técnico", "Profesional"])
+        if st.form_submit_button("GUARDAR REGISTRO"):
+            if nom and wa:
+                st.session_state['lista_registros'].append({"Fecha": "Hoy", "Nombre": nom, "WhatsApp": wa, "Nivel": niv})
+                st.success(f"¡Listo {nom}! Ya puedes consultar a Alonso abajo.")
+            else:
+                st.warning("Escribe tu nombre y WhatsApp.")
 
 st.write("---")
 
-# 7. Consultoría con el Agente Alonso
-st.warning("🏠 ¡Hola! Soy Alonso. Estoy aquí para guiarte en el mérito y el éxito profesional.")
+# 7. AGENTE ALONSO (Conexión Blindada)
+st.info("🏠 **Alonso:** Hola, soy tu asesor. ¿En qué puedo ayudarte con tu concurso?")
 
-duda = st.text_input("Escribe tu duda legal o de carrera aquí:", key="input_alonso")
+# Usamos st.chat_input que es el más estable en 2026
+pregunta = st.chat_input("Escribe tu duda aquí...")
 
-if duda:
+if pregunta:
     if client:
-        with st.spinner("Alonso está redactando tu respuesta técnica..."):
-            try:
-                response = client.chat.completions.create(
-                    model="gpt-4o",
-                    messages=[
-                        {"role": "system", "content": "Eres Alonso, el asesor experto de SÍ AL MÉRITO. Tu jefe es César Alonso Padilla. Respondes con rigor legal y motivación sobre la CNSC en Colombia."},
-                        {"role": "user", "content": duda}
-                    ]
-                )
-                st.info(response.choices[0].message.content)
-            except:
-                st.error("Hubo un problema de conexión con Alonso. Intenta enviar tu duda nuevamente.")
+        with st.chat_message("user"):
+            st.write(pregunta)
+        
+        with st.chat_message("assistant"):
+            with st.spinner("Alonso está pensando..."):
+                try:
+                    # Llamada simplificada para evitar el Connection Error
+                    chat_completion = client.chat.completions.create(
+                        model="gpt-4o",
+                        messages=[
+                            {"role": "system", "content": "Eres Alonso, asesor senior de SÍ AL MÉRITO. Respondes con brevedad y base legal sobre la CNSC en Colombia."},
+                            {"role": "user", "content": pregunta}
+                        ]
+                    )
+                    st.write(chat_completion.choices[0].message.content)
+                except Exception as e:
+                    st.error("No pude conectar. Por favor, intenta de nuevo.")
     else:
-        st.error("Error: La llave de la IA no está configurada correctamente.")
-
-st.caption("Versión Oficial 2026 - SÍ AL MÉRITO")
+        st.error("La IA no está configurada.")
