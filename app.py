@@ -1,135 +1,130 @@
 import streamlit as st
 from openai import OpenAI
 from PIL import Image
+import pandas as pd
+from datetime import datetime
+import os
 
 # Configuración de la página
-st.set_page_config(page_title="SÍ AL MÉRITO - Asesoría Virtual", page_icon="⚖️", layout="centered")
+st.set_page_config(page_title="SÍ AL MÉRITO - Registro Oficial", page_icon="⚖️", layout="centered")
 
-# --- CONFIGURACIÓN DE COLORES Y ESTILOS "SÍ AL MÉRITO" ---
+# Archivo donde se guardará la base de datos
+DB_FILE = "usuarios_si_al_merito.csv"
+
+# --- CONFIGURACIÓN DE COLORES Y ESTILOS ---
 st.markdown("""
     <style>
-    /* Fondo de la página */
-    .main {
-        background-color: #fcfcfc;
-    }
-    /* Color VERDE para el título principal (H1) */
-    h1 {
-        color: #2E8B57 !important; /* Verde esmeralda profesional */
-        font-weight: bold;
-        text-align: center;
-        margin-top: -20px;
-    }
-    /* Color VERDE para subtítulos (H3) */
-    h3 {
-        color: #2E8B57 !important;
-        text-align: center;
-    }
-    /* Estilo del botón principal (VERDE) */
+    h1 { color: #2E8B57 !important; text-align: center; font-weight: bold; }
+    h3 { color: #2E8B57 !important; text-align: center; }
     .stButton>button {
         background-color: #2E8B57 !important;
         color: white !important;
         border-radius: 12px;
-        border: none;
         width: 100%;
         font-weight: bold;
-        font-size: 18px;
-        padding: 10px;
     }
-    /* Efecto al pasar el mouse por el botón */
-    .stButton>button:hover {
-        background-color: #1e5d3a !important;
-        color: white !important;
-    }
-    /* Ocultar menú de Streamlit para más profesionalismo */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
-# --- MOSTRAR EL LOGO Y EL TÍTULO ---
-# Intentamos cargar el logo (asegúrate de haber subido 'logo.png')
+# --- CARGAR LOGO ---
 try:
     image = Image.open('logo.png')
-    # Creamos columnas para centrar el logo
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.image(image, use_column_width=True)
-except FileNotFoundError:
-    # Si no encuentra el logo, no muestra nada (o un mensaje de error discreto)
+except:
     pass
 
-# El TÍTULO EN VERDE que me pediste
 st.markdown("# Inicia tu camino al éxito con SÍ AL MÉRITO")
 
-# --- INICIALIZAR ESTADOS ---
+# --- FUNCIONES DE BASE DE DATOS ---
+def guardar_datos(nombre, documento, celular, nivel):
+    nueva_fila = {
+        "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Nombre": nombre,
+        "Documento": documento,
+        "WhatsApp": celular,
+        "Nivel": nivel
+    }
+    df_nuevo = pd.DataFrame([nueva_fila])
+    
+    if not os.path.isfile(DB_FILE):
+        df_nuevo.to_csv(DB_FILE, index=False, encoding='utf-8')
+    else:
+        df_nuevo.to_csv(DB_FILE, mode='a', header=False, index=False, encoding='utf-8')
+
+# --- LÓGICA DE NAVEGACIÓN ---
 if 'registro_completado' not in st.session_state:
     st.session_state.registro_completado = False
-if 'messages' not in st.session_state:
-    st.session_state.messages = []
 
-# --- PANTALLA 1: REGISTRO (Si no se ha completado) ---
 if not st.session_state.registro_completado:
-    st.markdown("### Diagnóstico Inicial Gratuito")
-    st.write("Registra tus datos para recibir asesoría personalizada sobre carrera administrativa en Colombia.")
+    st.markdown("### Registro de Aspirante Certificado")
+    st.info("Por favor, ingresa tus datos reales para recibir orientación precisa sobre los concursos de méritos.")
     
-    with st.form("registro_form"):
-        nombre = st.text_input("Tu Nombre Completo:")
-        whatsapp = st.text_input("Tu WhatsApp de contacto (con indicativo, ej: +57):")
-        nivel = st.selectbox("¿A qué nivel aspiras?", ["Selecciona...", "Asistencial", "Técnico", "Profesional"])
+    with st.form("registro_profesional"):
+        nombre = st.text_input("Nombres y Apellidos Completos:")
+        documento = st.text_input("Documento de Identidad (C.C):")
+        celular = st.text_input("Número de Celular / WhatsApp:")
+        nivel = st.selectbox("Nivel de Interés:", ["Asistencial", "Técnico", "Profesional"])
         
-        submit = st.form_submit_button("HABLAR CON ASESOR EXPERTO")
+        btn_registro = st.form_submit_button("REGISTRARME Y EMPEZAR CONSULTA")
         
-        if submit:
-            if not nombre or not whatsapp or nivel == "Selecciona...":
-                st.error("Por favor, completa todos los campos para continuar.")
-            else:
+        if btn_registro:
+            if nombre and documento and celular:
+                guardar_datos(nombre, documento, celular, nivel)
                 st.session_state.nombre_usuario = nombre
                 st.session_state.nivel_usuario = nivel
                 st.session_state.registro_completado = True
                 st.rerun()
+            else:
+                st.warning("⚠️ Todos los campos son obligatorios para validar tu identidad.")
 
-# --- PANTALLA 2: EL CHAT CON LA IA ---
 else:
-    # Título secundario
-    st.markdown(f"### Asesor Virtual para Nivel {st.session_state.nivel_usuario}")
-    
-    # Configurar cliente OpenAI (usa el Secret 'OPENAI_API_KEY')
+    # --- INTERFAZ DE CHAT ---
+    st.markdown(f"### Bienvenido, {st.session_state.nombre_usuario}")
+    st.write(f"Asesoría activa para Nivel: **{st.session_state.nivel_usuario}**")
+
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-    # Instrucciones del Sistema (Perfil de SÍ AL MÉRITO)
-    # ¡Importante! Aquí usamos 'gpt-3.5-turbo' para el saldo
-    if "system" not in [m["role"] for m in st.session_state.messages]:
-        prompt_sistema = f"""
-        Eres el consultor experto de SÍ AL MÉRITO. El usuario es {st.session_state.nombre_usuario}, aspira al nivel {st.session_state.nivel_usuario}. 
-        Tu tono es profesional, alentador y conocedor de la Ley 909 de 2004 y los procesos de la CNSC. 
-        Menciona que la asesoría personalizada completa tiene un costo de $120.000 COP cuando sea pertinente.
-        Responde siempre en español de Colombia.
-        """
-        st.session_state.messages.append({"role": "system", "content": prompt_sistema})
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "system", "content": f"Eres el consultor experto de SÍ AL MÉRITO. Atiendes a {st.session_state.nombre_usuario}. Tu especialidad son los concursos de la CNSC y la Procuraduría. Ofrece asesoría personalizada por $120.000 COP."}
+        ]
 
-    # Mostrar historial de mensajes
     for message in st.session_state.messages:
         if message["role"] != "system":
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
-    # Capturar nueva pregunta
-    if prompt := st.chat_input("Escribe tu duda aquí..."):
+    if prompt := st.chat_input("Escribe tu duda legal o técnica..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # Llamada a la IA (con el modelo correcto y saldo prepago)
         with st.chat_message("assistant"):
-            try:
-                response = client.chat.completions.create(
-                    model="gpt-3.5-turbo", # Modelo rápido y económico
-                    messages=st.session_state.messages
-                )
-                full_response = response.choices[0].message.content
-                st.markdown(full_response)
-                st.session_state.messages.append({"role": "assistant", "content": full_response})
-            except Exception as e:
-                # Manejo de error de saldo (RateLimitError)
-                st.error("Lo siento, hubo un problema técnico. Asegúrate de que la cuenta de OpenAI tenga saldo disponible.")
-                # st.write(f"Detalle del error: {e}") # Descomentar para depurar
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=st.session_state.messages
+            )
+            full_res = response.choices[0].message.content
+            st.markdown(full_res)
+            st.session_state.messages.append({"role": "assistant", "content": full_res})
+
+    # --- ZONA DEL DIRECTOR (Solo César) ---
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### Panel del Director")
+    if st.sidebar.checkbox("Ver Base de Datos"):
+        if os.path.isfile(DB_FILE):
+            df_mostrar = pd.read_csv(DB_FILE)
+            st.sidebar.write(f"Total registros: {len(df_mostrar)}")
+            
+            # Botón para descargar el Excel
+            csv = df_mostrar.to_csv(index=False).encode('utf-8')
+            st.sidebar.download_button(
+                label="📥 Descargar Base de Datos",
+                data=csv,
+                file_name=f"Base_Datos_SiAlMerito_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+            )
+        else:
+            st.sidebar.write("Aún no hay registros.")
