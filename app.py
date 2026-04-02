@@ -9,7 +9,8 @@ import os
 st.set_page_config(page_title="SÍ AL MÉRITO - Registro Oficial", page_icon="⚖️", layout="centered")
 
 # Archivo donde se guardará la base de datos (Usamos punto y coma para que Excel lo abra en columnas)
-DB_FILE = "usuarios_si_al_merito.csv"
+# Archivo donde se guardará la base de datos (Usamos punto y coma para que Excel lo abra en columnas)
+DB_FILE = "usuarios_si_al_merito.csv"  
 
 # --- CONFIGURACIÓN DE COLORES Y ESTILOS ---
 st.markdown("""
