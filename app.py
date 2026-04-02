@@ -6,13 +6,15 @@ from io import BytesIO
 # 1. Configuración de la página
 st.set_page_config(page_title="SÍ AL MÉRITO - Oficial", layout="wide")
 
-# 2. Conexión Directa y Robusta
-# Intentamos obtener la llave de los Secrets
+# 2. Conexión Directa a OpenAI
+client = None
 try:
-    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+    if "OPENAI_API_KEY" in st.secrets:
+        client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+    else:
+        st.error("Falta la clave OPENAI_API_KEY en Secrets.")
 except Exception as e:
-    st.error("Error: No se encontró la llave de acceso (API Key) en los Secrets de Streamlit.")
-    client = None
+    st.error(f"Error al conectar con la llave: {e}")
 
 # 3. Almacenamiento de registros
 if 'lista_registros' not in st.session_state:
@@ -34,7 +36,7 @@ with st.sidebar:
     else:
         st.info("Ingresa clave para descargar datos.")
 
-# 5. Interfaz Visual (Logo pequeño)
+# 5. Interfaz Visual
 col1, col2, col3 = st.columns([2, 1, 2])
 with col2:
     st.image("logo.png", width=120)
@@ -42,25 +44,22 @@ with col2:
 st.markdown("<h2 style='text-align: center; color: #1e7e34;'>SÍ AL MÉRITO: Tu Carrera Administrativa</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>Bienvenido, Cesar Alonso Padilla</p>", unsafe_allow_html=True)
 
-# 6. FORMULARIO DE REGISTRO (Recuperado)
-with st.expander("📝 REGISTRO DE ASPIRANTE (Haz clic aquí para registrarte)", expanded=True):
+# 6. Registro de Aspirante
+with st.expander("📝 REGISTRO DE ASPIRANTE", expanded=True):
     with st.form("reg_form"):
         nom = st.text_input("Nombre Completo:")
         wa = st.text_input("WhatsApp (+57):")
         niv = st.selectbox("Nivel:", ["Asistencial", "Técnico", "Profesional"])
         if st.form_submit_button("GUARDAR REGISTRO"):
             if nom and wa:
-                st.session_state['lista_registros'].append({"Fecha": "Hoy", "Nombre": nom, "WhatsApp": wa, "Nivel": niv})
-                st.success(f"¡Listo {nom}! Ya puedes consultar a Alonso abajo.")
-            else:
-                st.warning("Escribe tu nombre y WhatsApp.")
+                st.session_state['lista_registros'].append({"Nombre": nom, "WhatsApp": wa, "Nivel": niv})
+                st.success(f"¡Listo {nom}! Ya puedes consultar a Alonso.")
 
 st.write("---")
 
-# 7. AGENTE ALONSO (Conexión Blindada)
-st.info("🏠 **Alonso:** Hola, soy tu asesor. ¿En qué puedo ayudarte con tu concurso?")
+# 7. AGENTE ALONSO
+st.info("🏠 **Alonso:** Hola, soy tu asesor. ¿En qué puedo ayudarte?")
 
-# Usamos st.chat_input que es el más estable en 2026
 pregunta = st.chat_input("Escribe tu duda aquí...")
 
 if pregunta:
@@ -71,18 +70,15 @@ if pregunta:
         with st.chat_message("assistant"):
             with st.spinner("Alonso está pensando..."):
                 try:
-                    # Llamada simplificada para evitar el Connection Error
                     chat_completion = client.chat.completions.create(
                         model="gpt-4o",
                         messages=[
-                            {"role": "system", "content": "Eres Alonso, asesor senior de SÍ AL MÉRITO. Respondes con brevedad y base legal sobre la CNSC en Colombia."},
+                            {"role": "system", "content": "Eres Alonso, asesor de SÍ AL MÉRITO. Respondes con rigor legal sobre la CNSC en Colombia."},
                             {"role": "user", "content": pregunta}
                         ]
                     )
                     st.write(chat_completion.choices[0].message.content)
                 except Exception as e:
-                    except Exception as e:
-    st.error(f"Error detectado: {e}")
-    st.info("Revisa si tu API Key en 'Secrets' de Streamlit es correcta.")
+                    st.error(f"Error técnico real: {e}")
     else:
-        st.error("La IA no está configurada.")
+        st.error("La IA no está configurada en los Secrets.")
