@@ -65,7 +65,28 @@ if opcion == "🔑 Panel Director":
 # --- SECCIÓN: ASISTENTE IA ---
 elif opcion == "🤖 Asistente IA":
     st.header("🤖 Consultoría Estratégica con IA")
-    st.info("Hola César, estoy listo para asesorarte.")
+    st.info# --- SECCIÓN: ASISTENTE IA ---
+elif opcion == "🤖 Asistente IA":
+    st.header("🤖 Consultoría Estratégica con IA")
+    # AQUÍ ESTÁ EL CAMBIO QUE SOLICITASTE:
+    st.info("Hola, soy Alonso, tu asistente especializado en concursos de Carrera Administrativa.")
+    
+    pregunta = st.text_input("Haz tu consulta legal o estratégica aquí:")
+    
+    if pregunta:
+        with st.spinner("Consultando base normativa..."):
+            try:
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "Eres un experto en derecho administrativo y concursos de la CNSC en Colombia. Tu nombre es Alonso y respondes de forma clara, técnica y motivadora."},
+                        {"role": "user", "content": pregunta}
+                    ]
+                )
+                st.markdown("### 📝 Respuesta de Alonso:")
+                st.write(response.choices[0].message.content)
+            except Exception as e:
+                st.error(f"Hubo un problema con la conexión: {e}")
 
 # --- SECCIÓN: SIMULACRO GRATUITO ---
 elif opcion == "📝 Simulacro Gratuito":
