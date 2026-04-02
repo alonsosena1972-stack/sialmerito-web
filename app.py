@@ -86,7 +86,7 @@ if not st.session_state.registro_completado:
                 st.session_state.nombre_usuario = nombre
                 st.session_state.nivel_usuario = nivel
                 st.session_state.registro_completado = True
-                st.experimental_rerun()
+                st.rerun()
 
 # --- PANTALLA 2: EL CHAT CON LA IA ---
 else:
