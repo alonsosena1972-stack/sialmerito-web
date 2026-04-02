@@ -1,45 +1,55 @@
 import streamlit as st
+import pandas as pd
 from openai import OpenAI
 
-# 1. Configuración visual (Tu marca siempre presente)
-st.set_page_config(page_title="SÍ AL MÉRITO - Asesor IA", layout="centered")
+# 1. Configuración de la página (Limpia y profesional)
+st.set_page_config(page_title="SÍ AL MÉRITO - Registro Oficial", layout="wide")
 
+# Conexión con la IA
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+# 2. Barra Lateral (Acceso Privado y Registro)
 with st.sidebar:
-    st.image("logo.png", width=200) if "logo.png" else None
-    st.title("SÍ AL MÉRITO")
-    st.subheader("Director: César Padilla")
-    st.markdown("---")
-    st.info("Este es tu espacio de consultoría privada para concursos de carrera.")
+    st.markdown("### 🔐 Acceso Privado")
+    clave = st.text_input("Clave de Administrador:", type="password")
+    
+    if clave == st.secrets["CLAVE_DIRECTOR"]:
+        st.success("Acceso Concedido")
+        st.write("Registros actuales: 2") # Simulación según tu imagen
+        
+        # Botón de descarga al estilo de tu foto
+        st.button("📥 Descargar Excel Profesional")
+    else:
+        st.info("Introduce tu clave para gestionar los datos.")
 
-# 2. Conexión segura con la IA
-try:
-    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-except Exception as e:
-    st.error("Error en la llave de conexión. Revisa los Secrets.")
+# 3. Cuerpo Principal (Basado fielmente en tu imagen)
+# Logotipo central
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.image("logo.png", use_container_width=True)
+    st.markdown("<h1 style='text-align: center; color: #1e7e34;'>Inicia tu camino al éxito con SÍ AL MÉRITO</h1>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>Bienvenido, Cesar Alonso Padilla</h3>", unsafe_allow_html=True)
 
-# 3. Interfaz del Agente Alonso
-st.header("🤖 Consultoría Estratégica con Alonso")
 st.write("---")
 
-st.markdown("### Hola, soy **Alonso**, tu asistente especializado en concursos de Carrera Administrativa.")
+# Cuadros de información (Estilo alertas de tu foto)
+st.error("📢 Dictan charlas en estas asesorías de este espacio")
+st.warning("🏠 ¡Hola! En SÍ AL MÉRITO estamos enfocados en brindar asesoramiento y orientación sobre diversos temas relacionados con el mérito, el éxito profesional, la superación personal y el desarrollo de habilidades. Si estás interesado en alguna charla específica o en un tema en particular, no dudes en decirme y con gusto te proporcionaré la información y el apoyo que necesitas. ¡Estoy aquí para ayudarte!")
 
-# Caja de chat
-pregunta = st.text_input("¿En qué puedo asesorarte hoy, César?", placeholder="Ej: ¿Qué requisitos tiene la convocatoria de la DIAN?")
+# 4. Agente IA "Alonso" integrado en la parte inferior
+st.write("")
+pregunta = st.text_input("Escribe tu duda...", placeholder="Escribe aquí tu pregunta para Alonso...")
 
 if pregunta:
-    with st.spinner("Alonso está analizando la normativa colombiana..."):
+    with st.spinner("Consultando..."):
         try:
             response = client.chat.completions.create(
-                model="gpt-4o", # Usamos el modelo más moderno y estable
+                model="gpt-4o",
                 messages=[
-                    {"role": "system", "content": "Tu nombre es Alonso. Eres el asesor senior de la academia SÍ AL MÉRITO. Eres experto en la CNSC, leyes 909, 1952, 1437 y procesos de selección en Colombia. Respondes de forma clara, técnica y muy profesional."},
+                    {"role": "system", "content": "Eres Alonso, el asesor senior de SÍ AL MÉRITO. Tu objetivo es motivar y guiar a César y sus estudiantes en temas de carrera administrativa y superación personal."},
                     {"role": "user", "content": pregunta}
                 ]
             )
-            st.markdown("#### 📝 Respuesta de Alonso:")
-            st.info(response.choices[0].message.content)
+            st.chat_message("assistant").write(response.choices[0].message.content)
         except Exception as e:
-            st.error(f"Lo siento, hubo un error técnico: {e}")
-
-st.markdown("---")
-st.caption("SÍ AL MÉRITO - Todos los derechos reservados 2026")
+            st.error(f"Error técnico: {e}")
