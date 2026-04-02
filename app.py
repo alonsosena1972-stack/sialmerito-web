@@ -55,6 +55,6 @@ else:
             st.markdown(prompt)
 
         with st.chat_message("assistant"):
-            response = client.chat.completions.create(model="gpt-4-turbo", messages=st.session_state.messages)
+            response = client.chat.completions.create(model=model="gpt-3.5-turbo", messages=st.session_state.messages)
             st.markdown(response.choices[0].message.content)
             st.session_state.messages.append({"role": "assistant", "content": response.choices[0].message.content})
