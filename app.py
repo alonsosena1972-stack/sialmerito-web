@@ -4,12 +4,13 @@ import pandas as pd
 from io import BytesIO
 from datetime import datetime
 
-# 1. CONFIGURACIÓN DE PÁGINA (Pestaña del navegador)
+# 1. CONFIGURACIÓN DE PÁGINA
 st.set_page_config(page_title="SÍ AL MÉRITO - Oficial", layout="wide", page_icon="⚖️")
 
 # 2. CONEXIÓN SEGURA A OPENAI Y VARIABLES DE CONTACTO
 TEL_1 = "573146715497"
 TEL_2 = "573004417737"
+ENLACE_GRUPO = "https://chat.whatsapp.com/HSjyh6FKsHb6mTdIkhAeaU?s=sh&p=a&ilr=4"
 client = None
 
 try:
@@ -32,7 +33,7 @@ if 'contador' not in st.session_state:
 if 'historial' not in st.session_state:
     st.session_state['historial'] = []
 
-# 4. PANEL DEL DIRECTOR (Barra Lateral - RECUPERADO)
+# 4. PANEL DEL DIRECTOR (Barra Lateral)
 with st.sidebar:
     st.image("logo.png", width=150) 
     st.markdown("### 🔐 Panel de Control")
@@ -59,11 +60,11 @@ with st.sidebar:
     else:
         st.info("Ingrese la clave para gestionar datos.")
 
-# 5. ENCABEZADO PRINCIPAL (Tu Marca Original)
+# 5. ENCABEZADO PRINCIPAL
 st.markdown("<h1 style='text-align: center; color: #1e7e34; font-family: sans-serif;'>Inicia tu camino al Éxito con SÍ AL MÉRITO</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; font-size: 1.3em; color: #555;'>Asesoría Especializada en Concursos de Carrera Administrativa - CNSC</p>", unsafe_allow_html=True)
 
-# 6. FORMULARIO DE REGISTRO (Mantiene tus 5 datos originales)
+# 6. FORMULARIO DE REGISTRO
 form_abierto = True if not st.session_state['usuario_nombre'] else False
 
 with st.expander("📝 REGISTRO DE ASPIRANTE (Completa para iniciar)", expanded=form_abierto):
@@ -94,7 +95,7 @@ with st.expander("📝 REGISTRO DE ASPIRANTE (Completa para iniciar)", expanded=
 
 st.write("---")
 
-# 7. AGENTE ALONSO (Chat Inteligente con Filtro Estratégico de 3 Preguntas)
+# 7. AGENTE ALONSO (Cerebro Recargado con Rigor Técnico y Captación)
 if st.session_state['usuario_nombre']:
     nombre_corto = st.session_state['usuario_nombre'].split()[0]
     st.success(f"🏠 **Alonso:** ¡Hola, **{nombre_corto}**! Bienvenido/a a **SÍ AL MÉRITO**. Ya tengo tus datos registrados. ¿Qué duda legal o de carrera tienes hoy?")
@@ -113,14 +114,15 @@ if st.session_state['usuario_nombre']:
         with st.chat_message("user"):
             st.write(prompt)
 
-        # BLOQUEO ESTRATÉGICO A LA 3ra PREGUNTA (Cierre de ventas exprés)
+        # CIERRE A LA TERCERA PREGUNTA CON PASO AL GRUPO Y A CÉSAR
         if st.session_state['contador'] > 3:
             with st.chat_message("assistant"):
-                msg_cierre = f"He resuelto tus dudas clave y veo que te tomas muy en serio tu preparación para el nivel **{st.session_state['usuario_nivel']}**. Para asegurar tu plaza, hablemos directamente con nuestro director **César Padilla**."
+                msg_cierre = f"He resuelto tus dudas clave y veo que te tomas muy en serio tu preparación para el nivel **{st.session_state['usuario_nivel']}**. Para no perderte ninguna actualización y asegurar tu plaza, únete a nuestra comunidad exclusiva y hablemos con nuestro director **César Padilla**."
                 st.markdown(msg_cierre)
                 
                 texto_wa = f"Hola César, soy {st.session_state['usuario_nombre']}. Hablé con Alonso sobre el nivel {st.session_state['usuario_nivel']} y quiero asegurar mi plaza."
                 
+                st.link_button("👥 Unirme al Grupo de WhatsApp de SÍ AL MÉRITO", ENLACE_GRUPO)
                 c1, c2 = st.columns(2)
                 with c1: st.link_button("📲 Hablar con César (Línea 1)", f"https://wa.me/{TEL_1}?text={texto_wa}")
                 with c2: st.link_button("📲 Hablar con César (Línea 2)", f"https://wa.me/{TEL_2}?text={texto_wa}")
@@ -134,7 +136,19 @@ if st.session_state['usuario_nombre']:
                             respuesta = client.chat.completions.create(
                                 model="gpt-4o",
                                 messages=[
-                                    {"role": "system", "content": "Eres Alonso, el asesor experto de 'SÍ AL MÉRITO'. Eres profesional, motivador y te basas en leyes como la 909 de 2004 y 1960 de 2019. Siempre despídete deseando éxito en el mérito."},
+                                    {
+                                        "role": "system", 
+                                        "content": (
+                                            "Eres Alonso, el asesor experto de 'SÍ AL MÉRITO'. Tu propósito es asesorar rigurosamente sobre "
+                                            "concursos de carrera administrativa de la CNSC, la Ley 909 de 2004, juicios situacionales, "
+                                            "competencias funcionales y normativas del Estado colombiano (incluyendo criterios defensivos, "
+                                            "enfoque sistémico y gestión MIPG).\n\n"
+                                            "REGLA ESTRICTA DE FILTRADO:\n"
+                                            "1. Si el usuario te envía saludos vacíos (como 'hola', 'buenos días'), stickers, imágenes o "
+                                            "cualquier mensaje ajeno a los concursos públicos, DEBES QUEDARTE COMPLETAMENTE CALLADO y no emitir respuesta.\n"
+                                            "2. Mantén un tono profesional, motivador, con propiedad técnica y directo al grano."
+                                        )
+                                    },
                                     *st.session_state['historial']
                                 ]
                             )
