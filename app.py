@@ -4,8 +4,36 @@ import pandas as pd
 from io import BytesIO
 from datetime import datetime
 
-# 1. CONFIGURACIÓN DE PÁGINA
-st.set_page_config(page_title="SÍ AL MÉRITO - Oficial", layout="wide", page_icon="⚖️")
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO PROFESIONAL
+st.set_page_config(page_title="SÍ AL MÉRITO | Consultoría Especializada CNSC", layout="centered", page_icon="⚖️")
+
+# Estilos CSS personalizados para una interfaz ultra profesional y limpia
+st.markdown("""
+    <style>
+    .main-title {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 700;
+        color: #111827;
+        font-size: 2.2rem;
+        margin-bottom: 0px;
+        text-align: center;
+    }
+    .subtitle {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        color: #4B5563;
+        font-size: 1.1rem;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .card-box {
+        background-color: #F9FAFB;
+        padding: 30px;
+        border-radius: 12px;
+        border: 1px solid #E5E7EB;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # 2. CONEXIÓN SEGURA A OPENAI Y VARIABLES DE CONTACTO
 TEL_1 = "573146715497"
@@ -28,6 +56,8 @@ if 'usuario_nombre' not in st.session_state:
     st.session_state['usuario_nombre'] = ""
 if 'usuario_nivel' not in st.session_state:
     st.session_state['usuario_nivel'] = ""
+if 'usuario_concurso' not in st.session_state:
+    st.session_state['usuario_concurso'] = ""
 if 'contador' not in st.session_state:
     st.session_state['contador'] = 0
 if 'historial' not in st.session_state:
@@ -35,14 +65,13 @@ if 'historial' not in st.session_state:
 
 # 4. PANEL DEL DIRECTOR (Barra Lateral)
 with st.sidebar:
-    st.image("logo.png", width=150) 
-    st.markdown("### 🔐 Panel de Control")
+    st.markdown("### 🔐 Panel Ejecutivo")
     pass_admin = st.text_input("Contraseña Maestro:", type="password")
     
     if pass_admin == st.secrets.get("CLAVE_DIRECTOR", "CESAR2026"):
         st.success("Acceso Autorizado")
         if st.session_state['lista_registros']:
-            st.write(f"Registros actuales: {len(st.session_state['lista_registros'])}")
+            st.write(f"Aspirantes registrados: {len(st.session_state['lista_registros'])}")
             df = pd.DataFrame(st.session_state['lista_registros'])
             
             output = BytesIO()
@@ -56,49 +85,56 @@ with st.sidebar:
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
         else:
-            st.info("Aún no hay aspirantes registrados.")
+            st.info("Aún no hay aspirantes registrados hoy.")
     else:
-        st.info("Ingrese la clave para gestionar datos.")
+        st.info("Área exclusiva para la dirección.")
 
-# 5. ENCABEZADO PRINCIPAL
-st.markdown("<h1 style='text-align: center; color: #1e7e34; font-family: sans-serif;'>Inicia tu camino al Éxito con SÍ AL MÉRITO</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-size: 1.3em; color: #555;'>Asesoría Especializada en Concursos de Carrera Administrativa - CNSC</p>", unsafe_allow_html=True)
+# 5. ENCABEZADO PROFESIONAL
+st.markdown("<h1 class='main-title'>SÍ AL MÉRITO</h1>", unsafe_allow_html=True)
+st.markdown("<p class='subtitle'>Plataforma de Asesoría Inteligente para Concursos de Carrera Administrativa - CNSC</p>", unsafe_allow_html=True)
 
-# 6. FORMULARIO DE REGISTRO
+# 6. FORMULARIO DE ACCESO SIMPLIFICADO (Sin cédula, limpio y directo)
 form_abierto = True if not st.session_state['usuario_nombre'] else False
 
-with st.expander("📝 REGISTRO DE ASPIRANTE (Completa para iniciar)", expanded=form_abierto):
-    with st.form("registro_detallado"):
+if form_abierto:
+    st.markdown("<div class='card-box'>", unsafe_allow_html=True)
+    st.markdown("#### 🎯 Inicia tu asesoría personalizada")
+    st.markdown("Completa tus datos básicos para habilitar el acceso directo con **Alonso**, nuestro asesor experto en normatividad y juicios situacionales.")
+    
+    with st.form("registro_simplificado"):
+        nombre = st.text_input("Nombres y Apellidos:")
+        
         col1, col2 = st.columns(2)
         with col1:
-            nombre = st.text_input("Nombres y Apellidos Completos:")
-            cedula = st.text_input("Número de Documento (C.C.):")
+            whatsapp = st.text_input("Número de WhatsApp (+57):")
         with col2:
-            whatsapp = st.text_input("Celular / WhatsApp (+57):")
             correo = st.text_input("Correo Electrónico:")
             
-        nivel_aspirado = st.selectbox("¿A qué nivel aspiras en el concurso?", ["Asistencial", "Técnico", "Profesional"])
-        submit = st.form_submit_button("¡INICIAR MI CAMINO AL ÉXITO! 🚀")
+        concurso = st.text_input("Concurso al que aspiras (Ej: Entidades del Orden Nacional, DIAN, Territorial, etc.):")
+        nivel_aspirado = st.selectbox("Nivel al que aspiras:", ["Asistencial", "Técnico", "Profesional"])
+        
+        submit = st.form_submit_button("ACCEDER A LA ASESORÍA EXPERTA 🚀", use_container_width=True)
         
         if submit:
-            if nombre and cedula and whatsapp and correo:
+            if nombre and whatsapp and correo and concurso:
                 st.session_state['lista_registros'].append({
                     "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                    "Nombre": nombre, "Documento": cedula, "WhatsApp": whatsapp, "Email": correo, "Nivel": nivel_aspirado
+                    "Nombre": nombre, "WhatsApp": whatsapp, "Email": correo, "Concurso": concurso, "Nivel": nivel_aspirado
                 })
                 st.session_state['usuario_nombre'] = nombre
                 st.session_state['usuario_nivel'] = nivel_aspirado
-                st.balloons()
+                st.session_state['usuario_concurso'] = concurso
                 st.rerun()
             else:
-                st.error("Socio, llena todos los campos para tu asesoría personalizada.")
+                st.warning("Socio, por favor completa todos los campos para continuar.")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 st.write("---")
 
-# 7. AGENTE ALONSO (Cerebro Recargado con Rigor Técnico y Captación)
+# 7. AGENTE ALONSO (Cerebro Activo tras el Registro)
 if st.session_state['usuario_nombre']:
     nombre_corto = st.session_state['usuario_nombre'].split()[0]
-    st.success(f"🏠 **Alonso:** ¡Hola, **{nombre_corto}**! Bienvenido/a a **SÍ AL MÉRITO**. Ya tengo tus datos registrados. ¿Qué duda legal o de carrera tienes hoy?")
+    st.success(f"🤖 **Alonso (Asesor SÍ AL MÉRITO):** ¡Hola, **{nombre_corto}**! Qué gusto saludarte. Veo que vas por el nivel **{st.session_state['usuario_nivel']}** en el concurso **{st.session_state['usuario_concurso']}**. ¿Cuál es tu primera duda sobre la CNSC o los casos situacionales?")
     
     # Mostrar historial de chat
     for chat in st.session_state['historial']:
@@ -106,7 +142,7 @@ if st.session_state['usuario_nombre']:
             st.markdown(chat["content"])
 
     # Entrada de chat
-    prompt = st.chat_input("Escribe aquí tu duda sobre la CNSC, leyes o procesos...")
+    prompt = st.chat_input("Escribe aquí tu duda técnica o jurídica...")
 
     if prompt:
         st.session_state['contador'] += 1
@@ -117,21 +153,21 @@ if st.session_state['usuario_nombre']:
         # CIERRE A LA TERCERA PREGUNTA CON PASO AL GRUPO Y A CÉSAR
         if st.session_state['contador'] > 3:
             with st.chat_message("assistant"):
-                msg_cierre = f"He resuelto tus dudas clave y veo que te tomas muy en serio tu preparación para el nivel **{st.session_state['usuario_nivel']}**. Para no perderte ninguna actualización y asegurar tu plaza, únete a nuestra comunidad exclusiva y hablemos con nuestro director **César Padilla**."
+                msg_cierre = f"He resuelto tus dudas clave y veo que te preparas con toda para el nivel **{st.session_state['usuario_nivel']}**. Para no perderte ningún aviso de la CNSC y asegurar tu plaza, únete a nuestra comunidad oficial y da el paso definitivo con nuestro director **César Padilla**."
                 st.markdown(msg_cierre)
                 
-                texto_wa = f"Hola César, soy {st.session_state['usuario_nombre']}. Hablé con Alonso sobre el nivel {st.session_state['usuario_nivel']} y quiero asegurar mi plaza."
+                texto_wa = f"Hola César, soy {st.session_state['usuario_nombre']}. Me preparo para el nivel {st.session_state['usuario_nivel']} ({st.session_state['usuario_concurso']}) y quiero asegurar mi plaza con tu asesoría."
                 
-                st.link_button("👥 Unirme al Grupo de WhatsApp de SÍ AL MÉRITO", ENLACE_GRUPO)
+                st.link_button("👥 Unirme al Grupo Oficial de WhatsApp", ENLACE_GRUPO, use_container_width=True)
                 c1, c2 = st.columns(2)
-                with c1: st.link_button("📲 Hablar con César (Línea 1)", f"https://wa.me/{TEL_1}?text={texto_wa}")
-                with c2: st.link_button("📲 Hablar con César (Línea 2)", f"https://wa.me/{TEL_2}?text={texto_wa}")
-            st.warning("Has alcanzado el límite de consultas del filtro rápido. ¡Es momento de asegurar tu éxito con el Director!")
+                with c1: st.link_button("📲 Hablar con César (Línea 1)", f"https://wa.me/{TEL_1}?text={texto_wa}", use_container_width=True)
+                with c2: st.link_button("📲 Hablar con César (Línea 2)", f"https://wa.me/{TEL_2}?text={texto_wa}", use_container_width=True)
+            st.warning("Has alcanzado el límite de consultas rápidas. ¡Es momento de asegurar tu éxito directamente con la Dirección!")
         
         else:
             if client:
                 with st.chat_message("assistant"):
-                    with st.spinner("Alonso está consultando la normativa..."):
+                    with st.spinner("Alonso está analizando la normativa..."):
                         try:
                             respuesta = client.chat.completions.create(
                                 model="gpt-4o",
@@ -156,8 +192,8 @@ if st.session_state['usuario_nombre']:
                             st.write(res_text)
                             st.session_state['historial'].append({"role": "assistant", "content": res_text})
                         except Exception as e:
-                            st.error(f"Problema de conexión: {e}")
+                            st.error(f"Problema temporal de conexión: {e}")
             else:
                 st.warning("API Key no configurada.")
 else:
-    st.info("🏠 **Alonso:** ¡Hola! Soy Alonso. Por favor, **regístrate arriba** para poder saludarte por tu nombre y asesorarte.")
+    st.info("👆 Por favor, completa el formulario superior para que Alonso pueda conocer tu perfil y atenderte de forma personalizada.")
