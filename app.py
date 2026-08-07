@@ -94,7 +94,7 @@ with st.expander("📝 REGISTRO DE ASPIRANTE (Completa para iniciar)", expanded=
 
 st.write("---")
 
-# 7. AGENTE ALONSO (Chat Inteligente con Cierre Estratégico)
+# 7. AGENTE ALONSO (Chat Inteligente con Filtro Estratégico de 3 Preguntas)
 if st.session_state['usuario_nombre']:
     nombre_corto = st.session_state['usuario_nombre'].split()[0]
     st.success(f"🏠 **Alonso:** ¡Hola, **{nombre_corto}**! Bienvenido/a a **SÍ AL MÉRITO**. Ya tengo tus datos registrados. ¿Qué duda legal o de carrera tienes hoy?")
@@ -113,10 +113,10 @@ if st.session_state['usuario_nombre']:
         with st.chat_message("user"):
             st.write(prompt)
 
-        # BLOQUEO ESTRATÉGICO A LA 6ta PREGUNTA (Cierre de ventas)
-        if st.session_state['contador'] > 5:
+        # BLOQUEO ESTRATÉGICO A LA 3ra PREGUNTA (Cierre de ventas exprés)
+        if st.session_state['contador'] > 3:
             with st.chat_message("assistant"):
-                msg_cierre = f"He resuelto varias de tus dudas y veo que te tomas muy en serio tu preparación para el nivel **{st.session_state['usuario_nivel']}**. Para asegurar tu plaza, te invito a hablar directamente con nuestro director **César Padilla**."
+                msg_cierre = f"He resuelto tus dudas clave y veo que te tomas muy en serio tu preparación para el nivel **{st.session_state['usuario_nivel']}**. Para asegurar tu plaza, hablemos directamente con nuestro director **César Padilla**."
                 st.markdown(msg_cierre)
                 
                 texto_wa = f"Hola César, soy {st.session_state['usuario_nombre']}. Hablé con Alonso sobre el nivel {st.session_state['usuario_nivel']} y quiero asegurar mi plaza."
@@ -124,7 +124,7 @@ if st.session_state['usuario_nombre']:
                 c1, c2 = st.columns(2)
                 with c1: st.link_button("📲 Hablar con César (Línea 1)", f"https://wa.me/{TEL_1}?text={texto_wa}")
                 with c2: st.link_button("📲 Hablar con César (Línea 2)", f"https://wa.me/{TEL_2}?text={texto_wa}")
-            st.warning("Has alcanzado el límite de consultas gratuitas. ¡Es momento de asegurar tu éxito con el Director!")
+            st.warning("Has alcanzado el límite de consultas del filtro rápido. ¡Es momento de asegurar tu éxito con el Director!")
         
         else:
             if client:
