@@ -5,29 +5,30 @@ from io import BytesIO
 from datetime import datetime
 import os
 
-# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (FONDO AZUL Y LETRAS NEGRAS)
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (ESTILO GITHUB DARK & CONTRASTE TOTAL)
 str_app.set_page_config(
     page_title="SÍ AL MÉRITO | Tu Éxito en la CNSC", 
     layout="centered", 
     page_icon="🚀"
 )
 
-# Estilos CSS con fondo azul y letras en color negro
+# Estilos CSS optimizados al estilo de entorno de desarrollo profesional (GitHub Dark)
 str_app.markdown("""
     <style>
     .stApp {
-        background: linear-gradient(135deg, #0A2540 0%, #1A365D 50%, #0F172A 100%) !important;
-        color: #000000 !important;
+        background: #0D1117 !important;
+        color: #F0F6FC !important;
     }
     
-    /* Forzar que todos los textos, títulos y etiquetas sean negros */
-    h1, h2, h3, h4, h5, h6, p, span, label, .stMarkdown, .main-title, .subtitle, .footer-title, .footer-text, .footer-contacto {
-        color: #000000 !important;
+    /* Textos generales claros y legibles */
+    h1, h2, h3, h4, h5, h6, p, span, label, .stMarkdown {
+        color: #F0F6FC !important;
     }
     
     .main-title {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
+        color: #238636 !important; /* Verde estilo GitHub para SÍ AL MÉRITO */
         font-size: 2.6rem;
         text-align: center;
         margin-bottom: 5px;
@@ -35,22 +36,23 @@ str_app.markdown("""
     }
     .subtitle {
         font-family: 'Inter', sans-serif;
+        color: #58A6FF !important;
         font-size: 1.15rem;
         text-align: center;
         margin-bottom: 35px;
         font-weight: 500;
     }
     .card-box {
-        background: rgba(255, 255, 255, 0.85) !important;
+        background: #161B22 !important;
         backdrop-filter: blur(12px);
         padding: 35px;
-        border-radius: 16px;
-        border: 1px solid #000000 !important;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        border-radius: 12px;
+        border: 1px solid #30363D !important;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
     }
     .footer-institucional {
-        background: rgba(255, 255, 255, 0.9) !important;
-        border-top: 2px solid #000000;
+        background: #161B22 !important;
+        border-top: 2px solid #238636;
         padding: 25px;
         border-radius: 12px;
         text-align: center;
@@ -58,40 +60,57 @@ str_app.markdown("""
         font-family: 'Inter', sans-serif;
     }
     .footer-title {
+        color: #238636 !important; /* Verde */
         font-weight: 700;
         font-size: 1.2rem;
         margin-bottom: 8px;
     }
     .footer-text {
+        color: #8B949E !important;
         font-size: 0.95rem;
         line-height: 1.6;
     }
     .footer-contacto {
+        color: #238636 !important; /* WhatsApp en Verde */
         font-weight: 600;
         font-size: 0.95rem;
         margin-top: 10px;
     }
     
-    /* Cajas de texto y selectores */
+    /* Clases personalizadas para colorear textos específicos */
+    .texto-verde {
+        color: #238636 !important;
+        font-weight: 700;
+    }
+    .texto-correo {
+        color: #58A6FF !important; /* Correo en Azul */
+        text-decoration: underline;
+    }
+    .texto-whatsapp {
+        color: #238636 !important; /* WhatsApp en Verde */
+        font-weight: 700;
+    }
+
+    /* Cajas de texto y selectores estilo editor limpio */
     .stTextInput input, .stSelectbox select, .stTextArea textarea {
-        background-color: #FFFFFF !important;
-        color: #000000 !important;
-        border: 1px solid #000000 !important;
-        border-radius: 8px !important;
+        background-color: #0D1117 !important;
+        color: #F0F6FC !important;
+        border: 1px solid #30363D !important;
+        border-radius: 6px !important;
     }
     
     .stButton button {
-        background: linear-gradient(135deg, #00D4B2 0%, #0284C7 100%) !important;
+        background: #238636 !important;
         color: white !important;
         font-weight: 700 !important;
-        border-radius: 8px !important;
+        border-radius: 6px !important;
         border: none !important;
         padding: 0.6rem 1.2rem;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
     .stButton button:hover {
-        opacity: 0.9;
-        transform: translateY(-2px);
+        background: #2ea043 !important;
+        transform: translateY(-1px);
     }
     </style>
 """, unsafe_allow_html=True)
@@ -145,7 +164,7 @@ else:
 
 # 4. PANEL DEL DIRECTOR (Barra Lateral Ejecutiva)
 with str_app.sidebar:
-    str_app.markdown("### 🔐 Panel Ejecutivo SÍ AL MÉRITO")
+    str_app.markdown("### 🔐 Panel Ejecutivo <span class='texto-verde'>SÍ AL MÉRITO</span>", unsafe_allow_html=True)
     pass_admin = str_app.text_input("Contraseña Maestro:", type="password")
     
     if pass_admin == str_app.secrets.get("CLAVE_DIRECTOR", "CESAR2026"):
@@ -158,7 +177,7 @@ with str_app.sidebar:
             str_app.markdown("---")
             str_app.markdown("#### 👥 Últimos Aspirantes:")
             for idx, row in df.tail(5).iterrows():
-                str_app.caption(f"📌 **{row.get('Nombre', 'N/A')}**\n📧 {row.get('Email', 'N/A')}\n📱 {row.get('WhatsApp', 'N/A')}\n🎯 Nivel: {row.get('Nivel', 'N/A')}")
+                str_app.caption(f"📌 **{row.get('Nombre', 'N/A')}**\n📧 <span class='texto-correo'>{row.get('Email', 'N/A')}</span>\n📱 <span class='texto-whatsapp'>{row.get('WhatsApp', 'N/A')}</span>\n🎯 Nivel: {row.get('Nivel', 'N/A')}", unsafe_allow_html=True)
             
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
@@ -185,14 +204,14 @@ form_abierto = True if not str_app.session_state['usuario_nombre'] else False
 if form_abierto:
     str_app.markdown("<div class='card-box'>", unsafe_allow_html=True)
     str_app.markdown("### 🎯 Activa tu Asesoría Experta con Alonso")
-    str_app.markdown(f"Ingresa tus datos para conectar de inmediato. Empresa autorizada • Correo: **{CORREO_EMPRESA}**")
+    str_app.markdown(f"Ingresa tus datos para conectar de inmediato. Empresa autorizada • Correo: <span class='texto-correo'>{CORREO_EMPRESA}</span>", unsafe_allow_html=True)
     
     with str_app.form("registro_vibrante"):
         nombre = str_app.text_input("Nombres y Apellidos:")
         
         col1, col2 = str_app.columns(2)
         with col1:
-            whatsapp = str_app.text_input("Número de WhatsApp (+57):")
+            whatsapp = str_app.text_input("Número de <span class='texto-whatsapp'>WhatsApp</span> (+57):", help="Número de contacto")
         with col2:
             correo = str_app.text_input("Correo Electrónico:")
             
@@ -233,7 +252,7 @@ if str_app.session_state['usuario_nombre']:
     if str_app.session_state['bloqueado']:
         str_app.error("🚫 Lo sentimos, debido a lenguaje inapropiado o intentos de sabotaje, tu acceso al chat ha sido suspendido permanentemente. Comunícate directamente con la dirección si consideras que es un error.")
     else:
-        str_app.success(f"🤖 **Alonso (Asesor SÍ AL MÉRITO):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
+        str_app.success(f"🤖 **Alonso (Asesor <span class='texto-verde'>SÍ AL MÉRITO</span>):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál estu consulta hoy?", icon=None)
         
         for chat in str_app.session_state['historial']:
             with str_app.chat_message(chat["role"]):
@@ -324,12 +343,12 @@ else:
 # 8. PIE DE PÁGINA INSTITUCIONAL (Fijo y con toda la identidad corporativa)
 str_app.markdown(f"""
     <div class="footer-institucional">
-        <div class="footer-title">⚖️ SÍ AL MÉRITO — Talleres, Cursos y Asesorías Especializadas</div>
+        <div class="footer-title">⚖️ <span class='texto-verde'>SÍ AL MÉRITO</span> — Talleres, Cursos y Asesorías Especializadas</div>
         <div class="footer-text">
             Somos un equipo de trabajo encargado de visibilizar los Concursos de Carrera Administrativa en Colombia, para todos los interesados, Bachilleres, Técnicos, Tecnólogos y Profesionales. Estamos 24/7 para que te conviertas en un servidor público por mérito.
         </div>
         <div class="footer-contacto">
-            📱 WhatsApp: 3146715497 - 3153838792 - 3004417737 &nbsp;|&nbsp; ✉️ Correo: {CORREO_EMPRESA}
+            📱 <span class='texto-whatsapp'>WhatsApp</span>: 3146715497 - 3153838792 - 3004417737 &nbsp;|&nbsp; ✉️ Correo: <span class='texto-correo'>{CORREO_EMPRESA}</span>
         </div>
     </div>
 """, unsafe_allow_html=True)
