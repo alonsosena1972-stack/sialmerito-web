@@ -5,14 +5,14 @@ from io import BytesIO
 from datetime import datetime
 import os
 
-# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (ESTILO GITHUB DARK & CONTRASTE TOTAL)
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (DOS TONOS: SIDEBAR AZUL CIELO Y CONTENIDO OSCURO)
 str_app.set_page_config(
     page_title="SÍ AL MÉRITO | Tu Éxito en la CNSC", 
     layout="centered", 
     page_icon="🚀"
 )
 
-# Estilos CSS optimizados al estilo de entorno de desarrollo profesional (GitHub Dark)
+# Estilos CSS optimizados con barra lateral en azul cielo y contenido principal en GitHub Dark
 str_app.markdown("""
     <style>
     .stApp {
@@ -20,7 +20,18 @@ str_app.markdown("""
         color: #F0F6FC !important;
     }
     
-    /* Textos generales claros y legibles */
+    /* Fondo específico para la barra lateral (Panel de Administración en Azul Cielo) */
+    [data-testid="stSidebar"] {
+        background-color: #1E3A8A !important;
+        border-right: 2px solid #38BDF8 !important;
+    }
+    
+    /* Textos dentro de la barra lateral en blanco y azul claro para máxima visibilidad */
+    [data-testid="stSidebar"] h3, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label, [data-testid="stSidebar"] p {
+        color: #FFFFFF !important;
+    }
+
+    /* Textos generales claros y legibles en el cuerpo principal */
     h1, h2, h3, h4, h5, h6, p, span, label, .stMarkdown {
         color: #F0F6FC !important;
     }
@@ -93,13 +104,13 @@ str_app.markdown("""
     
     /* Estilo específico para el texto "Contraseña Maestro:" en la barra lateral (Azul Cielo) */
     [data-testid="stSidebar"] label p {
-        color: #58A6FF !important;
+        color: #38BDF8 !important;
         font-weight: 600 !important;
     }
 
     /* Estilo para la cajita de aviso del panel (Área exclusiva para la dirección en Verde) */
     [data-testid="stSidebar"] .stAlert {
-        background-color: rgba(35, 134, 54, 0.15) !important;
+        background-color: rgba(35, 134, 54, 0.2) !important;
         border: 1px solid #238636 !important;
         color: #238636 !important;
         border-radius: 6px !important;
