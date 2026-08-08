@@ -5,30 +5,29 @@ from io import BytesIO
 from datetime import datetime
 import os
 
-# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (MENOS OSCURO Y ALTO CONTRASTE)
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (FONDO AZUL Y LETRAS NEGRAS)
 str_app.set_page_config(
     page_title="SÍ AL MÉRITO | Tu Éxito en la CNSC", 
     layout="centered", 
     page_icon="🚀"
 )
 
-# Estilos CSS con tonos menos oscuros (Azules más claros / limpios)
+# Estilos CSS con fondo azul y letras en color negro
 str_app.markdown("""
     <style>
     .stApp {
-        background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 50%, #1E40AF 100%) !important;
-        color: #FFFFFF !important;
+        background: linear-gradient(135deg, #0A2540 0%, #1A365D 50%, #0F172A 100%) !important;
+        color: #000000 !important;
     }
     
-    /* Textos generales y etiquetas en color blanco brillante o amarillo claro para pruebas */
-    h1, h2, h3, h4, h5, h6, p, span, label, .stMarkdown {
-        color: #FFFFFF !important;
+    /* Forzar que todos los textos, títulos y etiquetas sean negros */
+    h1, h2, h3, h4, h5, h6, p, span, label, .stMarkdown, .main-title, .subtitle, .footer-title, .footer-text, .footer-contacto {
+        color: #000000 !important;
     }
     
     .main-title {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
-        color: #FFFFFF !important;
         font-size: 2.6rem;
         text-align: center;
         margin-bottom: 5px;
@@ -36,23 +35,22 @@ str_app.markdown("""
     }
     .subtitle {
         font-family: 'Inter', sans-serif;
-        color: #93C5FD !important;
         font-size: 1.15rem;
         text-align: center;
         margin-bottom: 35px;
         font-weight: 500;
     }
     .card-box {
-        background: rgba(255, 255, 255, 0.15) !important;
+        background: rgba(255, 255, 255, 0.85) !important;
         backdrop-filter: blur(12px);
         padding: 35px;
         border-radius: 16px;
-        border: 2px solid #93C5FD !important;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        border: 1px solid #000000 !important;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
     }
     .footer-institucional {
-        background: rgba(30, 58, 138, 0.9) !important;
-        border-top: 2px solid #93C5FD;
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-top: 2px solid #000000;
         padding: 25px;
         border-radius: 12px;
         text-align: center;
@@ -60,34 +58,30 @@ str_app.markdown("""
         font-family: 'Inter', sans-serif;
     }
     .footer-title {
-        color: #93C5FD !important;
         font-weight: 700;
         font-size: 1.2rem;
         margin-bottom: 8px;
     }
     .footer-text {
-        color: #E2E8F0 !important;
         font-size: 0.95rem;
         line-height: 1.6;
     }
     .footer-contacto {
-        color: #34D399 !important;
         font-weight: 600;
         font-size: 0.95rem;
         margin-top: 10px;
     }
     
-    /* Cajas de texto y selectores: Fondo claro y letra oscura para máxima visibilidad */
+    /* Cajas de texto y selectores */
     .stTextInput input, .stSelectbox select, .stTextArea textarea {
-        background-color: #F8FAFC !important;
-        color: #0F172A !important;
-        border: 2px solid #60A5FA !important;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 1px solid #000000 !important;
         border-radius: 8px !important;
-        font-weight: 600 !important;
     }
     
     .stButton button {
-        background: linear-gradient(135deg, #10B981 0%, #0284C7 100%) !important;
+        background: linear-gradient(135deg, #00D4B2 0%, #0284C7 100%) !important;
         color: white !important;
         font-weight: 700 !important;
         border-radius: 8px !important;
