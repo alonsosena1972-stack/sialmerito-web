@@ -5,19 +5,28 @@ from io import BytesIO
 from datetime import datetime
 import os
 
-# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (VIBRANTE Y ALTO CONTRASTE)
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (FRANJA SUPERIOR EN VERDE)
 str_app.set_page_config(
     page_title="SÍ AL MÉRITO | Tu Éxito en la CNSC", 
     layout="centered", 
     page_icon="🚀"
 )
 
-# Estilos CSS con contraste profesional, burbujas de chat estilizadas y acentos vivos
+# Estilos CSS con eliminación de la franja blanca superior y cambio a verde
 str_app.markdown("""
     <style>
     .stApp {
         background: #0D1117 !important;
         color: #F0F6FC !important;
+    }
+    
+    /* Eliminar cualquier contenedor blanco por defecto de Streamlit arriba */
+    header[data-testid="stHeader"] {
+        background-color: #238636 !important;
+    }
+    
+    .block-container {
+        padding-top: 2rem !important;
     }
     
     /* Fondo específico para la barra lateral (Panel de Administración en Azul Cielo) */
@@ -38,7 +47,7 @@ str_app.markdown("""
     .main-title {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
-        color: #00D4B2 !important; /* Verde brillante/Teal con vida */
+        color: #00D4B2 !important;
         font-size: 2.6rem;
         text-align: center;
         margin-bottom: 5px;
@@ -47,14 +56,13 @@ str_app.markdown("""
     }
     .subtitle {
         font-family: 'Inter', sans-serif;
-        color: #38BDF8 !important; /* Azul cielo brillante */
+        color: #38BDF8 !important;
         font-size: 1.15rem;
         text-align: center;
         margin-bottom: 35px;
         font-weight: 500;
     }
     
-    /* Tarjetas y contenedores con bordes vivos para darles contraste */
     .card-box {
         background: #161B22 !important;
         backdrop-filter: blur(12px);
@@ -64,7 +72,6 @@ str_app.markdown("""
         box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
     }
     
-    /* Cajas de mensajes del chat (Burbujas con contraste y vida) */
     .stChatMessage {
         background-color: #161B22 !important;
         border: 1px solid #00D4B2 !important;
@@ -101,7 +108,6 @@ str_app.markdown("""
         margin-top: 10px;
     }
     
-    /* Clases personalizadas para colores específicos */
     .texto-verde {
         color: #00D4B2 !important;
         font-weight: 700;
@@ -115,13 +121,11 @@ str_app.markdown("""
         font-weight: 700;
     }
     
-    /* Estilo específico para la Contraseña Maestro en la barra lateral */
     [data-testid="stSidebar"] label p {
         color: #38BDF8 !important;
         font-weight: 600 !important;
     }
 
-    /* Estilo para la cajita de aviso del panel (Área exclusiva para la dirección) */
     [data-testid="stSidebar"] .stAlert {
         background-color: rgba(0, 212, 178, 0.15) !important;
         border: 1px solid #00D4B2 !important;
@@ -133,7 +137,6 @@ str_app.markdown("""
         font-weight: 600 !important;
     }
 
-    /* Cajas de texto y selectores */
     .stTextInput input, .stSelectbox select, .stTextArea textarea {
         background-color: #0D1117 !important;
         color: #FFFFFF !important;
