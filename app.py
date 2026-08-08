@@ -5,14 +5,14 @@ from io import BytesIO
 from datetime import datetime
 import os
 
-# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (VIBRANTE Y ALTO CONTRASTE)
 str_app.set_page_config(
     page_title="SÍ AL MÉRITO | Tu Éxito en la CNSC", 
     layout="centered", 
     page_icon="🚀"
 )
 
-# Estilos CSS con sidebar azul cielo, panel dirección verde, títulos verdes y contenido oscuro pro
+# Estilos CSS con contraste profesional, burbujas de chat estilizadas y acentos vivos
 str_app.markdown("""
     <style>
     .stApp {
@@ -26,7 +26,6 @@ str_app.markdown("""
         border-right: 2px solid #38BDF8 !important;
     }
     
-    /* Textos dentro de la barra lateral en blanco y azul claro */
     [data-testid="stSidebar"] span, [data-testid="stSidebar"] label, [data-testid="stSidebar"] p {
         color: #FFFFFF !important;
     }
@@ -39,50 +38,64 @@ str_app.markdown("""
     .main-title {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
-        color: #238636 !important; /* Título principal de entrada en Verde */
+        color: #00D4B2 !important; /* Verde brillante/Teal con vida */
         font-size: 2.6rem;
         text-align: center;
         margin-bottom: 5px;
         letter-spacing: -0.5px;
+        text-shadow: 0 0 15px rgba(0, 212, 178, 0.4);
     }
     .subtitle {
         font-family: 'Inter', sans-serif;
-        color: #58A6FF !important;
+        color: #38BDF8 !important; /* Azul cielo brillante */
         font-size: 1.15rem;
         text-align: center;
         margin-bottom: 35px;
         font-weight: 500;
     }
+    
+    /* Tarjetas y contenedores con bordes vivos para darles contraste */
     .card-box {
         background: #161B22 !important;
         backdrop-filter: blur(12px);
         padding: 35px;
-        border-radius: 12px;
-        border: 1px solid #30363D !important;
-        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+        border-radius: 14px;
+        border: 2px solid #38BDF8 !important;
+        box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
     }
+    
+    /* Cajas de mensajes del chat (Burbujas con contraste y vida) */
+    .stChatMessage {
+        background-color: #161B22 !important;
+        border: 1px solid #00D4B2 !important;
+        border-radius: 12px !important;
+        padding: 15px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
     .footer-institucional {
         background: #161B22 !important;
-        border-top: 2px solid #238636;
+        border-top: 3px solid #00D4B2;
         padding: 25px;
         border-radius: 12px;
         text-align: center;
         margin-top: 50px;
         font-family: 'Inter', sans-serif;
+        box-shadow: 0 -5px 20px rgba(0, 212, 178, 0.15);
     }
     .footer-title {
-        color: #238636 !important;
+        color: #00D4B2 !important;
         font-weight: 700;
         font-size: 1.2rem;
         margin-bottom: 8px;
     }
     .footer-text {
-        color: #8B949E !important;
+        color: #C9D1D9 !important;
         font-size: 0.95rem;
         line-height: 1.6;
     }
     .footer-contacto {
-        color: #238636 !important;
+        color: #00D4B2 !important;
         font-weight: 600;
         font-size: 0.95rem;
         margin-top: 10px;
@@ -90,55 +103,56 @@ str_app.markdown("""
     
     /* Clases personalizadas para colores específicos */
     .texto-verde {
-        color: #238636 !important;
+        color: #00D4B2 !important;
         font-weight: 700;
     }
     .texto-correo {
-        color: #58A6FF !important;
+        color: #38BDF8 !important;
         text-decoration: underline;
     }
     .texto-whatsapp {
-        color: #238636 !important;
+        color: #00D4B2 !important;
         font-weight: 700;
     }
     
-    /* Estilo específico para la Contraseña Maestro en la barra lateral (Azul Cielo) */
+    /* Estilo específico para la Contraseña Maestro en la barra lateral */
     [data-testid="stSidebar"] label p {
         color: #38BDF8 !important;
         font-weight: 600 !important;
     }
 
-    /* Estilo para la cajita de aviso del panel (Área exclusiva para la dirección en Verde) */
+    /* Estilo para la cajita de aviso del panel (Área exclusiva para la dirección) */
     [data-testid="stSidebar"] .stAlert {
-        background-color: rgba(35, 134, 54, 0.25) !important;
-        border: 1px solid #238636 !important;
-        color: #238636 !important;
+        background-color: rgba(0, 212, 178, 0.15) !important;
+        border: 1px solid #00D4B2 !important;
+        color: #00D4B2 !important;
         border-radius: 6px !important;
     }
     [data-testid="stSidebar"] .stAlert p {
-        color: #238636 !important;
+        color: #00D4B2 !important;
         font-weight: 600 !important;
     }
 
-    /* Cajas de texto y selectores estilo editor limpio */
+    /* Cajas de texto y selectores */
     .stTextInput input, .stSelectbox select, .stTextArea textarea {
         background-color: #0D1117 !important;
-        color: #F0F6FC !important;
-        border: 1px solid #30363D !important;
+        color: #FFFFFF !important;
+        border: 1px solid #38BDF8 !important;
         border-radius: 6px !important;
     }
     
     .stButton button {
-        background: #238636 !important;
+        background: linear-gradient(135deg, #00D4B2 0%, #0284C7 100%) !important;
         color: white !important;
         font-weight: 700 !important;
         border-radius: 6px !important;
         border: none !important;
         padding: 0.6rem 1.2rem;
         transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 212, 178, 0.3);
     }
     .stButton button:hover {
-        background: #2ea043 !important;
+        opacity: 0.9;
         transform: translateY(-1px);
     }
     </style>
@@ -194,7 +208,7 @@ else:
 # 4. PANEL DEL DIRECTOR (Barra Lateral Ejecutiva)
 with str_app.sidebar:
     str_app.markdown("### 🔐 Panel Ejecutivo", unsafe_allow_html=True)
-    str_app.markdown("<h3 style='color: #238636; margin-top: -15px;'>SÍ AL MÉRITO</h3>", unsafe_allow_html=True)
+    str_app.markdown("<h3 style='color: #00D4B2; margin-top: -15px;'>SÍ AL MÉRITO</h3>", unsafe_allow_html=True)
     pass_admin = str_app.text_input("Contraseña Maestro:", type="password")
     
     if pass_admin == str_app.secrets.get("CLAVE_DIRECTOR", "CESAR2026"):
