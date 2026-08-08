@@ -5,14 +5,14 @@ from io import BytesIO
 from datetime import datetime
 import os
 
-# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (DOS TONOS: SIDEBAR AZUL CIELO Y CONTENIDO OSCURO)
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO
 str_app.set_page_config(
     page_title="SÍ AL MÉRITO | Tu Éxito en la CNSC", 
     layout="centered", 
     page_icon="🚀"
 )
 
-# Estilos CSS optimizados con barra lateral en azul cielo y contenido principal en GitHub Dark
+# Estilos CSS con sidebar azul cielo, panel dirección verde, títulos verdes y contenido oscuro pro
 str_app.markdown("""
     <style>
     .stApp {
@@ -26,7 +26,7 @@ str_app.markdown("""
         border-right: 2px solid #38BDF8 !important;
     }
     
-    /* Textos dentro de la barra lateral en blanco y azul claro para máxima visibilidad */
+    /* Textos dentro de la barra lateral en blanco y azul claro */
     [data-testid="stSidebar"] h3, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label, [data-testid="stSidebar"] p {
         color: #FFFFFF !important;
     }
@@ -39,7 +39,7 @@ str_app.markdown("""
     .main-title {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
-        color: #238636 !important; /* Verde estilo GitHub para SÍ AL MÉRITO */
+        color: #238636 !important; /* Título principal de entrada en Verde */
         font-size: 2.6rem;
         text-align: center;
         margin-bottom: 5px;
@@ -71,7 +71,7 @@ str_app.markdown("""
         font-family: 'Inter', sans-serif;
     }
     .footer-title {
-        color: #238636 !important; /* Verde */
+        color: #238636 !important;
         font-weight: 700;
         font-size: 1.2rem;
         margin-bottom: 8px;
@@ -82,27 +82,27 @@ str_app.markdown("""
         line-height: 1.6;
     }
     .footer-contacto {
-        color: #238636 !important; /* WhatsApp en Verde */
+        color: #238636 !important;
         font-weight: 600;
         font-size: 0.95rem;
         margin-top: 10px;
     }
     
-    /* Clases personalizadas para colorear textos específicos */
+    /* Clases personalizadas para colores específicos */
     .texto-verde {
         color: #238636 !important;
         font-weight: 700;
     }
     .texto-correo {
-        color: #58A6FF !important; /* Correo en Azul */
+        color: #58A6FF !important;
         text-decoration: underline;
     }
     .texto-whatsapp {
-        color: #238636 !important; /* WhatsApp en Verde */
+        color: #238636 !important;
         font-weight: 700;
     }
     
-    /* Estilo específico para el texto "Contraseña Maestro:" en la barra lateral (Azul Cielo) */
+    /* Estilo específico para la Contraseña Maestro en la barra lateral (Azul Cielo) */
     [data-testid="stSidebar"] label p {
         color: #38BDF8 !important;
         font-weight: 600 !important;
@@ -110,7 +110,7 @@ str_app.markdown("""
 
     /* Estilo para la cajita de aviso del panel (Área exclusiva para la dirección en Verde) */
     [data-testid="stSidebar"] .stAlert {
-        background-color: rgba(35, 134, 54, 0.2) !important;
+        background-color: rgba(35, 134, 54, 0.25) !important;
         border: 1px solid #238636 !important;
         color: #238636 !important;
         border-radius: 6px !important;
@@ -232,7 +232,7 @@ form_abierto = True if not str_app.session_state['usuario_nombre'] else False
 
 if form_abierto:
     str_app.markdown("<div class='card-box'>", unsafe_allow_html=True)
-    str_app.markdown("### 🎯 Activa tu Asesoría Experta con Alonso")
+    str_app.markdown("### 🎯 Activa tu Asesoría Experta con AlonsoBot")
     str_app.markdown(f"Ingresa tus datos para conectar de inmediato. Empresa autorizada • Correo: <span class='texto-correo'>{CORREO_EMPRESA}</span>", unsafe_allow_html=True)
     
     with str_app.form("registro_vibrante"):
@@ -240,14 +240,14 @@ if form_abierto:
         
         col1, col2 = str_app.columns(2)
         with col1:
-            whatsapp = str_app.text_input("Número de <span class='texto-whatsapp'>WhatsApp</span> (+57):", help="Número de contacto")
+            whatsapp = str_app.text_input("Número de WhatsApp (+57):", help="Número de contacto")
         with col2:
             correo = str_app.text_input("Correo Electrónico:")
             
         concurso = str_app.text_input("Concurso o Entidad a la que aspiras (Ej: DIAN, Territorial, etc.):")
         nivel_aspirado = str_app.selectbox("Nivel al que aspiras:", ["Asistencial", "Técnico", "Profesional"])
         
-        submit = str_app.form_submit_button("🚀 INICIAR CONSULTA CON ALONSO", use_container_width=True)
+        submit = str_app.form_submit_button("🚀 INICIAR CONSULTA CON ALONSOBOT", use_container_width=True)
         
         if submit:
             if nombre and whatsapp and correo and concurso:
@@ -281,7 +281,7 @@ if str_app.session_state['usuario_nombre']:
     if str_app.session_state['bloqueado']:
         str_app.error("🚫 Lo sentimos, debido a lenguaje inapropiado o intentos de sabotaje, tu acceso al chat ha sido suspendido permanentemente. Comunícate directamente con la dirección si consideras que es un error.")
     else:
-        str_app.success(f"🤖 **Alonso (Asesor <span class='texto-verde'>SÍ AL MÉRITO</span>):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
+        str_app.success(f"🤖 **AlonsoBot (Asesor <span class='texto-verde'>SÍ AL MÉRITO</span>):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
         
         for chat in str_app.session_state['historial']:
             with str_app.chat_message(chat["role"]):
@@ -318,7 +318,7 @@ if str_app.session_state['usuario_nombre']:
                     )
                     str_app.markdown(msg_cierre)
                     
-                    texto_wa = f"Hola César, soy {str_app.session_state['usuario_nombre']}. Terminé mis consultas con Alonso para el nivel {str_app.session_state['usuario_nivel']} ({str_app.session_state['usuario_concurso']}) y quiero asegurar mi plaza con tu asesoría."
+                    texto_wa = f"Hola César, soy {str_app.session_state['usuario_nombre']}. Terminé mis consultas con AlonsoBot para el nivel {str_app.session_state['usuario_nivel']} ({str_app.session_state['usuario_concurso']}) y quiero asegurar mi plaza con tu asesoría."
                     
                     str_app.link_button("🎙️ Unirme a la Capacitación Gratuita (Jueves y Viernes por Jitsi)", ENLACE_JITSI, use_container_width=True)
                     str_app.link_button("👥 Unirme al Grupo Oficial de WhatsApp", ENLACE_GRUPO, use_container_width=True)
@@ -334,7 +334,7 @@ if str_app.session_state['usuario_nombre']:
             else:
                 if client:
                     with str_app.chat_message("assistant"):
-                        with str_app.spinner("Alonso está consultando la normativa y enlaces..."):
+                        with str_app.spinner("AlonsoBot está consultando la normativa y enlaces..."):
                             try:
                                 respuesta = client.chat.completions.create(
                                     model="gpt-4o",
@@ -342,7 +342,7 @@ if str_app.session_state['usuario_nombre']:
                                         {
                                             "role": "system", 
                                             "content": (
-                                                f"Eres Alonso, el asesor experto de 'SÍ AL MÉRITO' dirigido por César Padilla. Tu propósito es asesorar rigurosamente sobre "
+                                                f"Eres AlonsoBot, el asesor experto de 'SÍ AL MÉRITO' dirigido por César Padilla. Tu propósito es asesorar rigurosamente sobre "
                                                 f"concursos de la CNSC, Ley 909, OPEC, juicios situacionales y normatividad.\n\n"
                                                 f"REGLAS CRÍTICAS DE COMPORTAMIENTO:\n"
                                                 f"1. FILTRO DE SALUDOS/TROLLEO: Si te escriben saludos vacíos ('hola'), responde cordialmente invitandole a hacer su consulta técnica. Si detectas insultos o lenguaje obsceno, incluye la palabra clave [BLOQUEAR_USUARIO].\n"
@@ -367,7 +367,7 @@ if str_app.session_state['usuario_nombre']:
                 else:
                     str_app.warning("API Key no configurada.")
 else:
-    str_app.info("👆 Por favor, completa el formulario superior para que Alonso conozca tu perfil y comience tu asesoría.")
+    str_app.info("👆 Por favor, completa el formulario superior para que AlonsoBot conozca tu perfil y comience tu asesoría.")
 
 # 8. PIE DE PÁGINA INSTITUCIONAL (Fijo y con toda la identidad corporativa)
 str_app.markdown(f"""
