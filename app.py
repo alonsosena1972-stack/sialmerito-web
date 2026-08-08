@@ -5,14 +5,14 @@ from io import BytesIO
 from datetime import datetime
 import os
 
-# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (FRANJA SUPERIOR EN VERDE)
 str_app.set_page_config(
     page_title="SÍ AL MÉRITO | Tu Éxito en la CNSC", 
     layout="centered", 
     page_icon="🚀"
 )
 
-# Estilos CSS incluyendo la franja del chat input en verde institucional
+# Estilos CSS con eliminación de la franja blanca superior y cambio a verde
 str_app.markdown("""
     <style>
     .stApp {
@@ -20,24 +20,16 @@ str_app.markdown("""
         color: #F0F6FC !important;
     }
     
+    /* Eliminar cualquier contenedor blanco por defecto de Streamlit arriba */
     header[data-testid="stHeader"] {
         background-color: #238636 !important;
     }
     
     .block-container {
         padding-top: 2rem !important;
-        background-color: #0D1117 !important;
     }
     
-    /* Bloque superior en verde */
-    div.block-container > div:first-child {
-        background-color: #238636 !important;
-        padding: 30px !important;
-        border-radius: 12px !important;
-        margin-bottom: 25px !important;
-        border-bottom: 2px solid #161B22 !important;
-    }
-    
+    /* Fondo específico para la barra lateral (Panel de Administración en Azul Cielo) */
     [data-testid="stSidebar"] {
         background-color: #1E3A8A !important;
         border-right: 2px solid #38BDF8 !important;
@@ -47,6 +39,7 @@ str_app.markdown("""
         color: #FFFFFF !important;
     }
 
+    /* Textos generales claros y legibles en el cuerpo principal */
     h1, h2, h3, h4, h5, h6, p, span, label, .stMarkdown {
         color: #F0F6FC !important;
     }
@@ -54,18 +47,19 @@ str_app.markdown("""
     .main-title {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
-        color: #FFFFFF !important;
+        color: #00D4B2 !important;
         font-size: 2.6rem;
         text-align: center;
         margin-bottom: 5px;
         letter-spacing: -0.5px;
+        text-shadow: 0 0 15px rgba(0, 212, 178, 0.4);
     }
     .subtitle {
         font-family: 'Inter', sans-serif;
-        color: #E2E8F0 !important;
+        color: #38BDF8 !important;
         font-size: 1.15rem;
         text-align: center;
-        margin-bottom: 0px;
+        margin-bottom: 35px;
         font-weight: 500;
     }
     
@@ -84,18 +78,6 @@ str_app.markdown("""
         border-radius: 12px !important;
         padding: 15px !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Franja inferior del chat input de color verde */
-    [data-testid="stChatInput"] {
-        background-color: #238636 !important;
-        padding: 10px !important;
-        border-radius: 12px !important;
-        border: 2px solid #00D4B2 !important;
-    }
-    [data-testid="stChatInput"] textarea {
-        background-color: #0D1117 !important;
-        color: #FFFFFF !important;
     }
 
     .footer-institucional {
@@ -310,14 +292,14 @@ if form_abierto:
 
 str_app.write("---")
 
-# 7. AGENTE ALONSOBOT (Cerebro Completo con saludo actualizado)
+# 7. AGENTE ALONSOBOT (Cerebro Completo)
 if str_app.session_state['usuario_nombre']:
     nombre_corto = str_app.session_state['usuario_nombre'].split()[0]
     
     if str_app.session_state['bloqueado']:
         str_app.error("🚫 Lo sentimos, debido a lenguaje inapropiado o intentos de sabotaje, tu acceso al chat ha sido suspendido permanentemente. Comunícate directamente con la dirección si consideras que es un error.")
     else:
-        str_app.success(f"🤖 **Soy Alonsobot tu Asesor especializado de <span class='texto-verde'>SÍ AL MÉRITO</span>.** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
+        str_app.success(f"🤖 **AlonsoBot (Asesor <span class='texto-verde'>SÍ AL MÉRITO</span>):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
         
         for chat in str_app.session_state['historial']:
             with str_app.chat_message(chat["role"]):
@@ -343,19 +325,18 @@ if str_app.session_state['usuario_nombre']:
                         f"🎓 **Te invitamos a nuestras Capacitaciones Gratuitas (Jueves y Viernes):**\n"
                         f"Conéctate a nuestras charlas en vivo sobre temas transversales, funcionales, competencias comportamentales y simulacros en vivo:\n"
                         f"🔗 [Entrar a la Sala Jitsi - Sesión Garantizada 2026]({ENLACE_JITSI})\n\n"
-                        f"🎯 **Nuestros Servicios Especializados SÍ AL MÉRITO:**\n"
-                        f"- **Actualización de datos en plataforma SIMO:** Costo de $50.000 COP.\n"
-                        f"- **Diagnóstico preliminar de hoja de vida:** Previo a la inscripción en cualquier concurso para verificar si aplicas o no a la OPEC.\n"
-                        f"- **Convenios interinstitucionales con SABERNET:** Para obtener ETDH, títulos académicos y laborales que te permiten sumar mayor puntuación en la etapa de valoración de antecedentes.\n"
-                        f"- **Asesoría Personalizada de César Padilla ($120.000 COP):** Materiales en PDF, normas completas, videos exclusivos por OPEC y simulacro avanzado de 50 preguntas.\n\n"
+                        f"🎯 **Asesoría Personalizada de César Padilla ($120.000 COP):**\n"
+                        f"- Materiales en PDF, normas y leyes completas.\n"
+                        f"- Videos exclusivos con expertos temáticos por OPEC.\n"
+                        f"- Simulacro avanzado de 50 preguntas ajustado a los ejes de tu OPEC.\n\n"
                         f"🔗 **Ecosistema SÍ AL MÉRITO:**\n"
                         f"- Simulacros Gratuitos y VIP en Wordwall: [Ver Simulacros]({ENLACE_WORDWALL})\n"
-                        f"- Canal de YouTube: [Ver Canal]({ENLACE_YOUTUBE})\n"
+                        f"- Canal de YouTube (Videos de concursos): [Ver Canal]({ENLACE_YOUTUBE})\n"
                         f"- Página de Facebook: [Visitar Facebook]({ENLACE_FACEBOOK})"
                     )
                     str_app.markdown(msg_cierre)
                     
-                    texto_wa = f"Hola César, soy {str_app.session_state['usuario_nombre']}. Terminé mis consultas con AlonsoBot para el nivel {str_app.session_state['usuario_nivel']} ({str_app.session_state['usuario_concurso']}) y quiero asegurar mi plaza con tu asesoría y servicios."
+                    texto_wa = f"Hola César, soy {str_app.session_state['usuario_nombre']}. Terminé mis consultas con AlonsoBot para el nivel {str_app.session_state['usuario_nivel']} ({str_app.session_state['usuario_concurso']}) y quiero asegurar mi plaza con tu asesoría."
                     
                     str_app.link_button("🎙️ Unirme a la Capacitación Gratuita (Jueves y Viernes por Jitsi)", ENLACE_JITSI, use_container_width=True)
                     str_app.link_button("👥 Unirme al Grupo Oficial de WhatsApp", ENLACE_GRUPO, use_container_width=True)
@@ -379,21 +360,13 @@ if str_app.session_state['usuario_nombre']:
                                         {
                                             "role": "system", 
                                             "content": (
-                                                f"Eres Alonsobot, el asesor especializado de la empresa 'SÍ AL MÉRITO' dirigida por César Padilla. "
-                                                f"Somos un equipo de trabajo altamente profesional, ganadores de varios concursos de carrera administrativa (incluyendo Unidad de Víctimas, Ministerio del Trabajo, entre otros).\n\n"
-                                                f"TU BASE DE CONOCIMIENTO Y NORMATIVIDAD:\n"
-                                                f"- Asesoras rigurosamente sobre concursos de la CNSC (https://www.cnsc.gov.co) y plataforma SIMO, Procuraduría, Fiscalía, Contraloría, Ministerio del Trabajo y universidades aliadas (como U. de Antioquia, ESAP, etc.).\n"
-                                                f"- Dominas la Ley 909 de 2004 (empleo público), Ley 1755 de 2015 (derecho de petición), Ley 815 y demás normas que regulan los concursos de carrera administrativa en Colombia.\n\n"
-                                                f"PORTAFOLIO DE SERVICIOS CLAVE DE SÍ AL MÉRITO QUE DEBES PROMOCIONAR ACTIVAMENTE:\n"
-                                                f"1. **Actualización de datos en plataforma SIMO:** Servicio profesional con un costo de $50.000 COP.\n"
-                                                f"2. **Diagnóstico preliminar de hoja de vida:** Realizado previo a la inscripción en cualquier concurso para verificar si el aspirante aplica o no a la OPEC deseada.\n"
-                                                f"3. **Convenios interinstitucionales con SABERNET:** Para adquirir ETDH, títulos académicos y laborales que otorgan mayor puntuación en la etapa de valoración de antecedentes.\n"
-                                                f"4. **Asesoría Personalizada de César Padilla ($120.000 COP):** Materiales en PDF, normas completas, videos exclusivos por OPEC y simulacro avanzado de 50 preguntas.\n"
-                                                f"5. **Capacitaciones Gratuitas:** Todos los jueves y viernes a través de Jitsi Meet ({ENLACE_JITSI}).\n\n"
+                                                f"Eres AlonsoBot, el asesor experto de 'SÍ AL MÉRITO' dirigido por César Padilla. Tu propósito es asesorar rigurosamente sobre "
+                                                f"concursos de la CNSC, Ley 909, OPEC, juicios situacionales y normatividad.\n\n"
                                                 f"REGLAS CRÍTICAS DE COMPORTAMIENTO:\n"
-                                                f"1. FILTRO DE SALUDOS/TROLLEO: Si escriben saludos vacíos ('hola'), responde cordialmente invitando a hacer su consulta técnica. Si detectas insultos o lenguaje obsceno, incluye [BLOQUEAR_USUARIO].\n"
-                                                f"2. ENLACES OFICIALES: Proporciona siempre los enlaces oficiales de la CNSC (https://www.cnsc.gov.co) o SIMO cuando hablen de inscripciones o empleo público.\n"
-                                                f"3. Mantén un tono profesional, experto, persuasivo, directo y orgulloso de ser parte de un equipo ganador de concursos públicos."
+                                                f"1. FILTRO DE SALUDOS/TROLLEO: Si te escriben saludos vacíos ('hola'), responde cordialmente invitandole a hacer su consulta técnica. Si detectas insultos o lenguaje obsceno, incluye la palabra clave [BLOQUEAR_USUARIO].\n"
+                                                f"2. NUNCA DIGAS 've a la página de la CNSC' de forma genérica: Proporciona siempre el enlace oficial de la CNSC (https://www.cnsc.gov.co) o SIMO.\n"
+                                                f"3. PROMOCIÓN DE CAPACITACIONES Y RECURSOS: Recuerda activamente que realizamos **capacitaciones gratuitas los jueves y viernes** sobre temas transversales, funcionales, competencias comportamentales y simulacros en vivo a través de nuestro enlace de Jitsi Meet ({ENLACE_JITSI}). Promociona también nuestro canal de YouTube ({ENLACE_YOUTUBE}), los simulacros en Wordwall (gratuitos y VIP por $20.000 COP en {ENLACE_WORDWALL}), la página de Facebook ({ENLACE_FACEBOOK}) y la Asesoría Personalizada de César Padilla por $120.000 COP, especificando nuestro correo de contacto ({CORREO_EMPRESA}).\n"
+                                                f"4. Mantén tono profesional, experto, persuasivo y directo."
                                             )
                                         },
                                         *str_app.session_state['historial']
@@ -419,10 +392,11 @@ str_app.markdown(f"""
     <div class="footer-institucional">
         <div class="footer-title">⚖️ <span class='texto-verde'>SÍ AL MÉRITO</span> — Talleres, Cursos y Asesorías Especializadas</div>
         <div class="footer-text">
-            Somos un equipo de trabajo profesional ganador de concursos de carrera administrativa (Unidad de Víctimas, Ministerio del Trabajo, entre otros), encargado de visibilizar los Concursos en Colombia. Estamos 24/7 para que te conviertas en servidor público por mérito.
+            Somos un equipo de trabajo encargado de visibilizar los Concursos de Carrera Administrativa en Colombia, para todos los interesados, Bachilleres, Técnicos, Tecnólogos y Profesionales. Estamos 24/7 para que te conviertas en un servidor público por mérito.
         </div>
         <div class="footer-contacto">
             📱 <span class='texto-whatsapp'>WhatsApp</span>: 3146715497 - 3153838792 - 3004417737 &nbsp;|&nbsp; ✉️ Correo: <span class='texto-correo'>{CORREO_EMPRESA}</span>
         </div>
     </div>
 """, unsafe_allow_html=True)
+
