@@ -3,6 +3,7 @@ from openai import OpenAI
 import pandas as pd
 from io import BytesIO
 from datetime import datetime
+import os
 
 # 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO
 st.set_page_config(
@@ -43,6 +44,32 @@ st.markdown("""
         border: 1px solid rgba(56, 189, 248, 0.2);
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
     }
+    .footer-institucional {
+        background: rgba(15, 23, 42, 0.9);
+        border-top: 2px solid #38BDF8;
+        padding: 25px;
+        border-radius: 12px;
+        text-align: center;
+        margin-top: 50px;
+        font-family: 'Inter', sans-serif;
+    }
+    .footer-title {
+        color: #38BDF8;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+    }
+    .footer-text {
+        color: #CBD5E1;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    .footer-contacto {
+        color: #00D4B2;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-top: 10px;
+    }
     .stTextInput input, .stSelectbox select {
         background-color: #0F172A !important;
         color: #F8FAFC !important;
@@ -67,7 +94,9 @@ st.markdown("""
 
 # 2. ENLACES OFICIALES Y RECURSOS DE SÍ AL MÉRITO
 TEL_1 = "573146715497"
-TEL_2 = "573004417737"
+TEL_2 = "573153838792"
+TEL_3 = "573004417737"
+CORREO_EMPRESA = "si.al.merito2026@gmail.com"
 ENLACE_GRUPO = "https://chat.whatsapp.com/HSjyh6FKsHb6mTdIkhAeaU?s=sh&p=a&ilr=4"
 WEB_URL = "https://sialmerito-web-bdo27kw6gkkzbg8psnzqx.streamlit.app"
 ENLACE_FACEBOOK = "https://www.facebook.com/share/1EgsN9D31Z/"
@@ -75,6 +104,7 @@ ENLACE_WORDWALL = "https://wordwall.net/es/myactivities"
 ENLACE_YOUTUBE = "https://www.youtube.com/@cesaralonsopadillaheredia2231"
 ENLACE_JITSI = "https://meet.jit.si/SiAlMeritoSesionGarantizada2026Oficial"
 
+ARCH_CSV = "base_aspirantes_si_al_merito.csv"
 client = None
 
 try:
@@ -85,9 +115,7 @@ try:
 except Exception as e:
     st.error(f"Error de conexión inicial: {e}")
 
-# 3. MEMORIA DE LA SESIÓN
-if 'lista_registros' not in st.session_state:
-    st.session_state['lista_registros'] = []
+# 3. GESTIÓN DE MEMORIA Y PERSISTENCIA (CSV)
 if 'usuario_nombre' not in st.session_state:
     st.session_state['usuario_nombre'] = ""
 if 'usuario_nivel' not in st.session_state:
@@ -101,6 +129,16 @@ if 'historial' not in st.session_state:
 if 'bloqueado' not in st.session_state:
     st.session_state['bloqueado'] = False
 
+if os.path.exists(ARCH_CSV):
+    try:
+        df_persisted = pd.read_csv(ARCH_CSV)
+        st.session_state['lista_registros'] = df_persisted.to_dict('records')
+    except:
+        st.session_state['lista_registros'] = []
+else:
+    if 'lista_registros' not in st.session_state:
+        st.session_state['lista_registros'] = []
+
 # 4. PANEL DEL DIRECTOR (Barra Lateral Ejecutiva)
 with st.sidebar:
     st.markdown("### 🔐 Panel Ejecutivo SÍ AL MÉRITO")
@@ -108,28 +146,34 @@ with st.sidebar:
     
     if pass_admin == st.secrets.get("CLAVE_DIRECTOR", "CESAR2026"):
         st.success("Acceso Autorizado")
-        if st.session_state['lista_registros']:
-            st.write(f"Aspirantes registrados: {len(st.session_state['lista_registros'])}")
-            df = pd.DataFrame(st.session_state['lista_registros'])
+        registros = st.session_state['lista_registros']
+        if registros:
+            st.write(f"Total Aspirantes Registrados: **{len(registros)}**")
+            df = pd.DataFrame(registros)
+            
+            st.markdown("---")
+            st.markdown("#### 👥 Últimos Aspirantes:")
+            for idx, row in df.tail(5).iterrows():
+                st.caption(f"📌 **{row.get('Nombre', 'N/A')}**\n📧 {row.get('Email', 'N/A')}\n📱 {row.get('WhatsApp', 'N/A')}\n🎯 Nivel: {row.get('Nivel', 'N/A')}")
             
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
                 df.to_excel(writer, index=False, sheet_name='Aspirantes')
             
             st.download_button(
-                label="📥 Descargar Base de Datos (Excel)",
+                label="📥 Descargar Base Completa (Excel)",
                 data=output.getvalue(),
-                file_name=f"Aspirantes_SiAlMerito_{datetime.now().strftime('%d_%m')}.xlsx",
+                file_name=f"Aspirantes_SiAlMerito_{datetime.now().strftime('%d_%m_%Y')}.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
         else:
-            st.info("Aún no hay aspirantes registrados hoy.")
+            st.info("Aún no hay aspirantes registrados.")
     else:
         st.info("Área exclusiva para la dirección.")
 
 # 5. ENCABEZADO VIVO Y PROFESIONAL
 st.markdown("<h1 class='main-title'>SÍ AL MÉRITO</h1>", unsafe_allow_html=True)
-st.markdown("<p class='subtitle'>Estrategia e Inteligencia Artificial para Conquistar tu Empleo Público en la CNSC</p>", unsafe_allow_html=True)
+st.markdown("<p class='subtitle'>Talleres, Cursos y Asesorías Especializadas para Conquistar tu Empleo Público</p>", unsafe_allow_html=True)
 
 # 6. FORMULARIO DE ACCESO FLUIDO
 form_abierto = True if not st.session_state['usuario_nombre'] else False
@@ -137,7 +181,7 @@ form_abierto = True if not st.session_state['usuario_nombre'] else False
 if form_abierto:
     st.markdown("<div class='card-box'>", unsafe_allow_html=True)
     st.markdown("### 🎯 Activa tu Asesoría Experta con Alonso")
-    st.markdown("Ingresa tus datos para conectar de inmediato con nuestro consultor inteligente especializado en normatividad y juicios situacionales.")
+    st.markdown(f"Ingresa tus datos para conectar de inmediato. Empresa autorizada • Correo: **{CORREO_EMPRESA}**")
     
     with st.form("registro_vibrante"):
         nombre = st.text_input("Nombres y Apellidos:")
@@ -155,10 +199,19 @@ if form_abierto:
         
         if submit:
             if nombre and whatsapp and correo and concurso:
-                st.session_state['lista_registros'].append({
+                nuevo_registro = {
                     "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                    "Nombre": nombre, "WhatsApp": whatsapp, "Email": correo, "Concurso": concurso, "Nivel": nivel_aspirado
-                })
+                    "Nombre": nombre, 
+                    "WhatsApp": whatsapp, 
+                    "Email": correo, 
+                    "Concurso": concurso, 
+                    "Nivel": nivel_aspirado
+                }
+                
+                st.session_state['lista_registros'].append(nuevo_registro)
+                df_temp = pd.DataFrame(st.session_state['lista_registros'])
+                df_temp.to_csv(ARCH_CSV, index=False)
+                
                 st.session_state['usuario_nombre'] = nombre
                 st.session_state['usuario_nivel'] = nivel_aspirado
                 st.session_state['usuario_concurso'] = concurso
@@ -178,16 +231,13 @@ if st.session_state['usuario_nombre']:
     else:
         st.success(f"🤖 **Alonso (Asesor SÍ AL MÉRITO):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{st.session_state['usuario_nivel']}** en **{st.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
         
-        # Mostrar historial de chat
         for chat in st.session_state['historial']:
             with st.chat_message(chat["role"]):
                 st.markdown(chat["content"])
 
-        # Entrada de chat
         prompt = st.chat_input("Escribe tu consulta sobre la CNSC, OPEC, simulacros o capacitaciones...")
 
         if prompt:
-            # FILTRO ANTI-TROLLS / SABOTAJE LOCAL RÁPIDO
             palabras_nefastas = ["puta", "mierda", "idiota", "estupido", "imbecil", "sexo", "porno", "hack", "burlas"]
             if any(p in prompt.lower() for p in palabras_nefastas):
                 st.session_state['bloqueado'] = True
@@ -198,7 +248,6 @@ if st.session_state['usuario_nombre']:
             with st.chat_message("user"):
                 st.write(prompt)
 
-            # CIERRE A LA CUARTA PREGUNTA CON DETALLE DE TODOS LOS CANALES Y CAPACITACIONES JITSI
             if st.session_state['contador'] > 4:
                 with st.chat_message("assistant"):
                     msg_cierre = (
@@ -227,7 +276,7 @@ if st.session_state['usuario_nombre']:
                     
                     c1, c2 = st.columns(2)
                     with c1: st.link_button("📲 Hablar con César (Línea 1)", f"https://wa.me/{TEL_1}?text={texto_wa}", use_container_width=True)
-                    with c2: st.link_button("📲 Hablar con César (Línea 2)", f"https://wa.me/{TEL_2}?text={texto_wa}", use_container_width=True)
+                    with c2: st.link_button("📲 Hablar con César (Línea 3)", f"https://wa.me/{TEL_3}?text={texto_wa}", use_container_width=True)
                 st.warning("Has alcanzado el límite de 4 consultas rápidas. ¡Es momento de asegurar tu plaza con la Dirección!")
             
             else:
@@ -246,7 +295,7 @@ if st.session_state['usuario_nombre']:
                                                 f"REGLAS CRÍTICAS DE COMPORTAMIENTO:\n"
                                                 f"1. FILTRO DE SALUDOS/TROLLEO: Si te escriben saludos vacíos ('hola'), responde cordialmente invitandole a hacer su consulta técnica. Si detectas insultos o lenguaje obsceno, incluye la palabra clave [BLOQUEAR_USUARIO].\n"
                                                 f"2. NUNCA DIGAS 've a la página de la CNSC' de forma genérica: Proporciona siempre el enlace oficial de la CNSC (https://www.cnsc.gov.co) o SIMO.\n"
-                                                f"3. PROMOCIÓN DE CAPACITACIONES Y RECURSOS: Recuerda activamente que realizamos **capacitaciones gratuitas los jueves y viernes** sobre temas transversales, funcionales, competencias comportamentales y simulacros en vivo a través de nuestro enlace de Jitsi Meet ({ENLACE_JITSI}). Promociona también nuestro canal de YouTube ({ENLACE_YOUTUBE}), los simulacros en Wordwall (gratuitos y VIP por $20.000 COP en {ENLACE_WORDWALL}), la página de Facebook ({ENLACE_FACEBOOK}) y la Asesoría Personalizada de César Padilla por $120.000 COP.\n"
+                                                f"3. PROMOCIÓN DE CAPACITACIONES Y RECURSOS: Recuerda activamente que realizamos **capacitaciones gratuitas los jueves y viernes** sobre temas transversales, funcionales, competencias comportamentales y simulacros en vivo a través de nuestro enlace de Jitsi Meet ({ENLACE_JITSI}). Promociona también nuestro canal de YouTube ({ENLACE_YOUTUBE}), los simulacros en Wordwall (gratuitos y VIP por $20.000 COP en {ENLACE_WORDWALL}), la página de Facebook ({ENLACE_FACEBOOK}) y la Asesoría Personalizada de César Padilla por $120.000 COP, especificando nuestro correo de contacto ({CORREO_EMPRESA}).\n"
                                                 f"4. Mantén tono profesional, experto, persuasivo y directo."
                                             )
                                         },
@@ -255,7 +304,6 @@ if st.session_state['usuario_nombre']:
                                 )
                                 res_text = respuesta.choices[0].message.content
                                 
-                                # VALIDAR SI EL MODELO DETECTÓ SABOTAJE EXPLÍCITO
                                 if "[BLOQUEAR_USUARIO]" in res_text:
                                     st.session_state['bloqueado'] = True
                                     st.rerun()
@@ -268,3 +316,16 @@ if st.session_state['usuario_nombre']:
                     st.warning("API Key no configurada.")
 else:
     st.info("👆 Por favor, completa el formulario superior para que Alonso conozca tu perfil y comience tu asesoría.")
+
+# 8. PIE DE PÁGINA INSTITUCIONAL (Fijo y con toda la identidad corporativa)
+st.markdown(f"""
+    <div class="footer-institucional">
+        <div class="footer-title">⚖️ SÍ AL MÉRITO — Talleres, Cursos y Asesorías Especializadas</div>
+        <div class="footer-text">
+            Somos un equipo de trabajo encargado de visibilizar los Concursos de Carrera Administrativa en Colombia, para todos los interesados, Bachilleres, Técnicos, Tecnólogos y Profesionales. Estamos 24/7 para que te conviertas en un servidor público por mérito.
+        </div>
+        <div class="footer-contacto">
+            📱 WhatsApp: 3146715497 - 3153838792 - 3004417737 &nbsp;|&nbsp; ✉️ Correo: {CORREO_EMPRESA}
+        </div>
+    </div>
+""", unsafe_allow_html=True)
