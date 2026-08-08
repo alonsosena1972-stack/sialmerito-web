@@ -90,6 +90,24 @@ str_app.markdown("""
         color: #238636 !important; /* WhatsApp en Verde */
         font-weight: 700;
     }
+    
+    /* Estilo específico para el texto "Contraseña Maestro:" en la barra lateral (Azul Cielo) */
+    [data-testid="stSidebar"] label p {
+        color: #58A6FF !important;
+        font-weight: 600 !important;
+    }
+
+    /* Estilo para la cajita de aviso del panel (Área exclusiva para la dirección en Verde) */
+    [data-testid="stSidebar"] .stAlert {
+        background-color: rgba(35, 134, 54, 0.15) !important;
+        border: 1px solid #238636 !important;
+        color: #238636 !important;
+        border-radius: 6px !important;
+    }
+    [data-testid="stSidebar"] .stAlert p {
+        color: #238636 !important;
+        font-weight: 600 !important;
+    }
 
     /* Cajas de texto y selectores estilo editor limpio */
     .stTextInput input, .stSelectbox select, .stTextArea textarea {
@@ -252,7 +270,7 @@ if str_app.session_state['usuario_nombre']:
     if str_app.session_state['bloqueado']:
         str_app.error("🚫 Lo sentimos, debido a lenguaje inapropiado o intentos de sabotaje, tu acceso al chat ha sido suspendido permanentemente. Comunícate directamente con la dirección si consideras que es un error.")
     else:
-        str_app.success(f"🤖 **Alonso (Asesor <span class='texto-verde'>SÍ AL MÉRITO</span>):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál estu consulta hoy?", icon=None)
+        str_app.success(f"🤖 **Alonso (Asesor <span class='texto-verde'>SÍ AL MÉRITO</span>):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
         
         for chat in str_app.session_state['historial']:
             with str_app.chat_message(chat["role"]):
