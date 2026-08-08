@@ -27,7 +27,7 @@ str_app.markdown("""
     }
     
     /* Textos dentro de la barra lateral en blanco y azul claro */
-    [data-testid="stSidebar"] h3, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label, [data-testid="stSidebar"] p {
+    [data-testid="stSidebar"] span, [data-testid="stSidebar"] label, [data-testid="stSidebar"] p {
         color: #FFFFFF !important;
     }
 
@@ -193,7 +193,8 @@ else:
 
 # 4. PANEL DEL DIRECTOR (Barra Lateral Ejecutiva)
 with str_app.sidebar:
-    str_app.markdown("### 🔐 Panel Ejecutivo <span class='texto-verde'>SÍ AL MÉRITO</span>", unsafe_allow_html=True)
+    str_app.markdown("### 🔐 Panel Ejecutivo", unsafe_allow_html=True)
+    str_app.markdown("<h3 style='color: #238636; margin-top: -15px;'>SÍ AL MÉRITO</h3>", unsafe_allow_html=True)
     pass_admin = str_app.text_input("Contraseña Maestro:", type="password")
     
     if pass_admin == str_app.secrets.get("CLAVE_DIRECTOR", "CESAR2026"):
@@ -240,7 +241,7 @@ if form_abierto:
         
         col1, col2 = str_app.columns(2)
         with col1:
-            whatsapp = str_app.text_input("Número de WhatsApp (+57):", help="Número de contacto")
+            whatsapp = str_app.text_input("Número de WhatsApp (+57):")
         with col2:
             correo = str_app.text_input("Correo Electrónico:")
             
@@ -274,7 +275,7 @@ if form_abierto:
 
 str_app.write("---")
 
-# 7. AGENTE ALONSO (Cerebro Completo: Jueves/Viernes Jitsi, YouTube, Pack $120k, Wordwall, Facebook, Anti-Trolls)
+# 7. AGENTE ALONSOBOT (Cerebro Completo)
 if str_app.session_state['usuario_nombre']:
     nombre_corto = str_app.session_state['usuario_nombre'].split()[0]
     
