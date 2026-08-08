@@ -72,6 +72,8 @@ ENLACE_GRUPO = "https://chat.whatsapp.com/HSjyh6FKsHb6mTdIkhAeaU?s=sh&p=a&ilr=4"
 WEB_URL = "https://sialmerito-web-bdo27kw6gkkzbg8psnzqx.streamlit.app"
 ENLACE_FACEBOOK = "https://www.facebook.com/share/1EgsN9D31Z/"
 ENLACE_WORDWALL = "https://wordwall.net/es/myactivities"
+ENLACE_YOUTUBE = "https://www.youtube.com/@cesaralonsopadillaheredia2231"
+ENLACE_JITSI = "https://meet.jit.si/SiAlMeritoSesionGarantizada2026Oficial"
 
 client = None
 
@@ -167,7 +169,7 @@ if form_abierto:
 
 st.write("---")
 
-# 7. AGENTE ALONSO (Cerebro Completo: Pack $120k, Wordwall, Facebook, Anti-Trolls y Enlaces)
+# 7. AGENTE ALONSO (Cerebro Completo: Jueves/Viernes Jitsi, YouTube, Pack $120k, Wordwall, Facebook, Anti-Trolls)
 if st.session_state['usuario_nombre']:
     nombre_corto = st.session_state['usuario_nombre'].split()[0]
     
@@ -182,7 +184,7 @@ if st.session_state['usuario_nombre']:
                 st.markdown(chat["content"])
 
         # Entrada de chat
-        prompt = st.chat_input("Escribe tu consulta sobre la CNSC, OPEC, simulacros o redes...")
+        prompt = st.chat_input("Escribe tu consulta sobre la CNSC, OPEC, simulacros o capacitaciones...")
 
         if prompt:
             # FILTRO ANTI-TROLLS / SABOTAJE LOCAL RÁPIDO
@@ -196,24 +198,30 @@ if st.session_state['usuario_nombre']:
             with st.chat_message("user"):
                 st.write(prompt)
 
-            # CIERRE A LA CUARTA PREGUNTA CON DETALLE DE TODOS LOS CANALES Y SERVICIOS
+            # CIERRE A LA CUARTA PREGUNTA CON DETALLE DE TODOS LOS CANALES Y CAPACITACIONES JITSI
             if st.session_state['contador'] > 4:
                 with st.chat_message("assistant"):
                     msg_cierre = (
-                        f"¡Excelente recorrido, **{nombre_corto}**! Has completado tus 4 consultas de rigor para el nivel **{st.session_state['usuario_nivel']}**.\n\n"
-                        f"🎯 **Da el salto definitivo al éxito con la Asesoría Personalizada de César Padilla ($120.000 COP):**\n"
+                        f"¡Excelente recorrido, **{nombre_corto}**! Has completado tus 4 consultas clave para el nivel **{st.session_state['usuario_nivel']}**.\n\n"
+                        f"🎓 **Te invitamos a nuestras Capacitaciones Gratuitas (Jueves y Viernes):**\n"
+                        f"Conéctate a nuestras charlas en vivo sobre temas transversales, funcionales, competencias comportamentales y simulacros en vivo:\n"
+                        f"🔗 [Entrar a la Sala Jitsi - Sesión Garantizada 2026]({ENLACE_JITSI})\n\n"
+                        f"🎯 **Asesoría Personalizada de César Padilla ($120.000 COP):**\n"
                         f"- Materiales en PDF, normas y leyes completas.\n"
-                        f"- Enlaces de videos exclusivos con expertos temáticos por OPEC.\n"
-                        f"- Simulacro avanzado de 50 preguntas ajustado a los ejes temáticos de tu OPEC.\n\n"
-                        f"🔗 **Explora más recursos y comunidad oficial:**\n"
-                        f"- Simulacros Gratuitos y VIP en Wordwall: [Acceder a Wordwall]({ENLACE_WORDWALL})\n"
-                        f"- Síguenos en nuestra página de Facebook: [Visitar Facebook]({ENLACE_FACEBOOK})"
+                        f"- Videos exclusivos con expertos temáticos por OPEC.\n"
+                        f"- Simulacro avanzado de 50 preguntas ajustado a los ejes de tu OPEC.\n\n"
+                        f"🔗 **Ecosistema SÍ AL MÉRITO:**\n"
+                        f"- Simulacros Gratuitos y VIP en Wordwall: [Ver Simulacros]({ENLACE_WORDWALL})\n"
+                        f"- Canal de YouTube (Videos de concursos): [Ver Canal]({ENLACE_YOUTUBE})\n"
+                        f"- Página de Facebook: [Visitar Facebook]({ENLACE_FACEBOOK})"
                     )
                     st.markdown(msg_cierre)
                     
                     texto_wa = f"Hola César, soy {st.session_state['usuario_nombre']}. Terminé mis consultas con Alonso para el nivel {st.session_state['usuario_nivel']} ({st.session_state['usuario_concurso']}) y quiero asegurar mi plaza con tu asesoría."
                     
+                    st.link_button("🎙️ Unirme a la Capacitación Gratuita (Jueves y Viernes por Jitsi)", ENLACE_JITSI, use_container_width=True)
                     st.link_button("👥 Unirme al Grupo Oficial de WhatsApp", ENLACE_GRUPO, use_container_width=True)
+                    st.link_button("📺 Visitar Canal de YouTube", ENLACE_YOUTUBE, use_container_width=True)
                     st.link_button("📘 Visitar Nuestra Página de Facebook", ENLACE_FACEBOOK, use_container_width=True)
                     st.link_button("🎯 Ir a Simulacros Wordwall (VIP y Gratis)", ENLACE_WORDWALL, use_container_width=True)
                     
@@ -236,9 +244,9 @@ if st.session_state['usuario_nombre']:
                                                 f"Eres Alonso, el asesor experto de 'SÍ AL MÉRITO' dirigido por César Padilla. Tu propósito es asesorar rigurosamente sobre "
                                                 f"concursos de la CNSC, Ley 909, OPEC, juicios situacionales y normatividad.\n\n"
                                                 f"REGLAS CRÍTICAS DE COMPORTAMIENTO:\n"
-                                                f"1. FILTRO DE SALUDOS/TROLLEO: Si te escriben saludos vacíos ('hola'), responde cordialmente invitandole a hacer su consulta técnica. Si detectas insultos, lenguaje obsceno o intentos de sabotaje, incluye la palabra clave [BLOQUEAR_USUARIO].\n"
+                                                f"1. FILTRO DE SALUDOS/TROLLEO: Si te escriben saludos vacíos ('hola'), responde cordialmente invitandole a hacer su consulta técnica. Si detectas insultos o lenguaje obsceno, incluye la palabra clave [BLOQUEAR_USUARIO].\n"
                                                 f"2. NUNCA DIGAS 've a la página de la CNSC' de forma genérica: Proporciona siempre el enlace oficial de la CNSC (https://www.cnsc.gov.co) o SIMO.\n"
-                                                f"3. PROMOCIÓN DE RECURSOS: Cuando pregunten por simulacros, recuérdales que tenemos versiones gratuitas y simulacros VIP por $20.000 COP en nuestra plataforma Wordwall ({ENLACE_WORDWALL}). Cuando pregunten por información, notas o contenidos recientes, recuérdales que pueden visitar nuestra página de Facebook ({ENLACE_FACEBOOK}). Y menciona que la Asesoría Personalizada de César Padilla cuesta $120.000 COP e incluye PDFs normativos, videos de YouTube por OPEC y simulacros de 50 preguntas.\n"
+                                                f"3. PROMOCIÓN DE CAPACITACIONES Y RECURSOS: Recuerda activamente que realizamos **capacitaciones gratuitas los jueves y viernes** sobre temas transversales, funcionales, competencias comportamentales y simulacros en vivo a través de nuestro enlace de Jitsi Meet ({ENLACE_JITSI}). Promociona también nuestro canal de YouTube ({ENLACE_YOUTUBE}), los simulacros en Wordwall (gratuitos y VIP por $20.000 COP en {ENLACE_WORDWALL}), la página de Facebook ({ENLACE_FACEBOOK}) y la Asesoría Personalizada de César Padilla por $120.000 COP.\n"
                                                 f"4. Mantén tono profesional, experto, persuasivo y directo."
                                             )
                                         },
