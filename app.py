@@ -4,14 +4,14 @@ import pandas as pd
 from io import BytesIO
 from datetime import datetime
 
-# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO (AZUL INFLUYENTE & VIVO)
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILO DINÁMICO
 st.set_page_config(
     page_title="SÍ AL MÉRITO | Tu Éxito en la CNSC", 
     layout="centered", 
     page_icon="🚀"
 )
 
-# Estilos CSS modernos: Azul influyente (#0A2540, #00D4B2, #635BFF), vibrante, juvenil y altamente profesional
+# Estilos CSS modernos: Azul influyente (#0A2540, #00D4B2)
 st.markdown("""
     <style>
     .stApp {
@@ -65,11 +65,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 2. CONEXIÓN SEGURA A OPENAI Y VARIABLES DE CONTACTO
+# 2. CONEXIÓN SEGURA A OPENAI Y VARIABLES DE CONTACTO Y RECURSOS
 TEL_1 = "573146715497"
 TEL_2 = "573004417737"
 ENLACE_GRUPO = "https://chat.whatsapp.com/HSjyh6FKsHb6mTdIkhAeaU?s=sh&p=a&ilr=4"
 WEB_URL = "https://sialmerito-web-bdo27kw6gkkzbg8psnzqx.streamlit.app"
+WORDWALL_GRATIS = "https://wordwall.net/es/resource/..." # Reemplaza o deja enlace base
 client = None
 
 try:
@@ -93,6 +94,8 @@ if 'contador' not in st.session_state:
     st.session_state['contador'] = 0
 if 'historial' not in st.session_state:
     st.session_state['historial'] = []
+if 'bloqueado' not in st.session_state:
+    st.session_state['bloqueado'] = False
 
 # 4. PANEL DEL DIRECTOR (Barra Lateral Ejecutiva)
 with st.sidebar:
@@ -162,73 +165,92 @@ if form_abierto:
 
 st.write("---")
 
-# 7. AGENTE ALONSO (Cerebro Activo - Filtro de 4 Preguntas + Enlaces Directos)
+# 7. AGENTE ALONSO (Cerebro Recargado: Pack $120k, Wordwall, Anti-Trolls y Enlaces Directos)
 if st.session_state['usuario_nombre']:
     nombre_corto = st.session_state['usuario_nombre'].split()[0]
-    st.success(f"🤖 **Alonso (Asesor SÍ AL MÉRITO):** ¡Hola, **{nombre_corto}**! Qué gusto saludarte. Preparándonos con toda para el nivel **{st.session_state['usuario_nivel']}** en **{st.session_state['usuario_concurso']}**. ¿Cuál es tu primera duda técnica o jurídica sobre la CNSC?")
     
-    # Mostrar historial de chat
-    for chat in st.session_state['historial']:
-        with st.chat_message(chat["role"]):
-            st.markdown(chat["content"])
-
-    # Entrada de chat
-    prompt = st.chat_input("Escribe tu consulta sobre la CNSC, Ley 909 o casos situacionales...")
-
-    if prompt:
-        st.session_state['contador'] += 1
-        st.session_state['historial'].append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.write(prompt)
-
-        # CIERRE A LA CUARTA PREGUNTA (4 PREGUNTAS LÍMITE) CON FACILITACIÓN DE ENLACES
-        if st.session_state['contador'] > 4:
-            with st.chat_message("assistant"):
-                msg_cierre = (
-                    f"He respondido tus 4 consultas clave de preparación para el nivel **{st.session_state['usuario_nivel']}**. "
-                    f"Para dar el siguiente paso y asegurar tu plaza con acompañamiento experto, te comparto el acceso directo a nuestra comunidad y a la plataforma:\n\n"
-                    f"🔗 **Enlace de la Plataforma:** {WEB_URL}"
-                )
-                st.markdown(msg_cierre)
-                
-                texto_wa = f"Hola César, soy {st.session_state['usuario_nombre']}. Completé mis consultas con Alonso para el nivel {st.session_state['usuario_nivel']} ({st.session_state['usuario_concurso']}) y quiero asegurar mi plaza."
-                
-                st.link_button("👥 Unirme al Grupo Oficial de WhatsApp", ENLACE_GRUPO, use_container_width=True)
-                c1, c2 = st.columns(2)
-                with c1: st.link_button("📲 Hablar con César (Línea 1)", f"https://wa.me/{TEL_1}?text={texto_wa}", use_container_width=True)
-                with c2: st.link_button("📲 Hablar con César (Línea 2)", f"https://wa.me/{TEL_2}?text={texto_wa}", use_container_width=True)
-            st.warning("Has alcanzado el límite de 4 consultas rápidas. ¡Es momento de asegurar tu éxito directamente con la Dirección!")
+    if st.session_state['bloqueado']:
+        st.error("🚫 Lo sentimos, debido a lenguaje inapropiado o intentos de sabotaje, tu acceso al chat ha sido suspendido permanentemente. Comunícate directamente con la dirección si consideras que es un error.")
+    else:
+        st.success(f"🤖 **Alonso (Asesor SÍ AL MÉRITO):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{st.session_state['usuario_nivel']}** en **{st.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
         
-        else:
-            if client:
+        # Mostrar historial de chat
+        for chat in st.session_state['historial']:
+            with st.chat_message(chat["role"]):
+                st.markdown(chat["content"])
+
+        # Entrada de chat
+        prompt = st.chat_input("Escribe tu consulta sobre la CNSC, OPEC o simulacros...")
+
+        if prompt:
+            # FILTRO ANTI-TROLLS / SABOTAJE LOCAL RÁPIDO
+            palabras_nefastas = ["puta", "mierda", "idiota", "estupido", "imbecil", "sexo", "porno", "hack", "burlas"]
+            if any(p in prompt.lower() for p in palabras_nefastas):
+                st.session_state['bloqueado'] = True
+                st.rerun()
+
+            st.session_state['contador'] += 1
+            st.session_state['historial'].append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.write(prompt)
+
+            # CIERRE A LA CUARTA PREGUNTA CON DETALLE DE LOS SERVICIOS DE CÉSAR PADILLA
+            if st.session_state['contador'] > 4:
                 with st.chat_message("assistant"):
-                    with st.spinner("Alonso está procesando la normatividad..."):
-                        try:
-                            respuesta = client.chat.completions.create(
-                                model="gpt-4o",
-                                messages=[
-                                    {
-                                        "role": "system", 
-                                        "content": (
-                                            "Eres Alonso, el asesor experto de 'SÍ AL MÉRITO'. Tu propósito es asesorar rigurosamente sobre "
-                                            "concursos de carrera administrativa de la CNSC, la Ley 909 de 2004, juicios situacionales, "
-                                            "competencias funcionales y normativas del Estado colombiano (incluyendo criterios defensivos, "
-                                            "enfoque sistémico y gestión MIPG).\n\n"
-                                            "REGLA ESTRICTA DE FILTRADO:\n"
-                                            "1. Si el usuario te envía saludos vacíos (como 'hola'), stickers, imágenes o "
-                                            "cualquier mensaje ajeno a los concursos públicos, DEBES QUEDARTE COMPLETAMENTE CALLADO y no emitir respuesta.\n"
-                                            "2. Mantén un tono profesional, motivador, con propiedad técnica y directo al grano."
-                                        )
-                                    },
-                                    *st.session_state['historial']
-                                ]
-                            )
-                            res_text = respuesta.choices[0].message.content
-                            st.write(res_text)
-                            st.session_state['historial'].append({"role": "assistant", "content": res_text})
-                        except Exception as e:
-                            st.error(f"Problema temporal de conexión: {e}")
+                    msg_cierre = (
+                        f"¡Excelente recorrido, **{nombre_corto}**! Has completado tus 4 consultas de rigor para el nivel **{st.session_state['usuario_nivel']}**.\n\n"
+                        f"🎯 **Da el salto definitivo al éxito con la Asesoría Personalizada de César Padilla ($120.000 COP):**\n"
+                        f"- Entrega de materiales de lectura, normas y leyes completas en PDF.\n"
+                        f"- Enlaces de videos exclusivos con expertos temáticos por OPEC.\n"
+                        f"- Simulacro avanzado de 50 preguntas ajustado a los ejes temáticos de tu OPEC.\n"
+                        f"- Acceso a simulacros VIP en Wordwall (también tenemos versiones gratuitas).\n\n"
+                        f"🔗 **Comparte y entra a la plataforma:** {WEB_URL}"
+                    )
+                    st.markdown(msg_cierre)
+                    
+                    texto_wa = f"Hola César, soy {st.session_state['usuario_nombre']}. Terminé mis consultas con Alonso para el nivel {st.session_state['usuario_nivel']} ({st.session_state['usuario_concurso']}) y quiero adquirir mi Asesoría Personalizada de $120.000."
+                    
+                    st.link_button("👥 Unirme al Grupo Oficial de WhatsApp", ENLACE_GRUPO, use_container_width=True)
+                    c1, c2 = st.columns(2)
+                    with c1: st.link_button("📲 Hablar con César (Línea 1)", f"https://wa.me/{TEL_1}?text={texto_wa}", use_container_width=True)
+                    with c2: st.link_button("📲 Hablar con César (Línea 2)", f"https://wa.me/{TEL_2}?text={texto_wa}", use_container_width=True)
+                st.warning("Has alcanzado el límite de 4 consultas rápidas. ¡Es momento de asegurar tu plaza con la Dirección!")
+            
             else:
-                st.warning("API Key no configurada.")
+                if client:
+                    with st.chat_message("assistant"):
+                        with st.spinner("Alonso está consultando la normativa y enlaces..."):
+                            try:
+                                respuesta = client.chat.completions.create(
+                                    model="gpt-4o",
+                                    messages=[
+                                        {
+                                            "role": "system", 
+                                            "content": (
+                                                "Eres Alonso, el asesor experto de 'SÍ AL MÉRITO' dirigido por César Padilla. Tu propósito es asesorar rigurosamente sobre "
+                                                "concursos de la CNSC, Ley 909, OPEC, juicios situacionales y normatividad.\n\n"
+                                                "REGLAS CRÍTICAS DE COMPORTAMIENTO:\n"
+                                                "1. FILTRO DE SALUDOS/TROLLEO: Si te escriben saludos vacíos ('hola'), responde cordialmente invitandole a hacer su consulta técnica. Si detectas insultos, lenguaje obsceno, vulgaridades o intentos de sabotaje, incluye en tu respuesta la palabra clave [BLOQUEAR_USUARIO] para que el sistema lo expulse.\n"
+                                                "2. NUNCA DIGAS 've a la página de la CNSC' de forma genérica: Proporciona siempre el enlace oficial de la CNSC (https://www.cnsc.gov.co) o el vínculo exacto relacionado con SIMO y convocatorias cuando pregunten por fechas y procesos.\n"
+                                                "3. PROMOCIÓN DE SERVICIOS: Cuando sea oportuno, recuerda que la Asesoría Personalizada de César Padilla cuesta $120.000 COP e incluye PDFs normativos, videos de YouTube por OPEC, y simulacros especializados. Menciona también los simulacros interactivos en Wordwall (gratuitos y VIP por $20.000 COP).\n"
+                                                "4. Mantén tono profesional, experto, persuasivo y directo."
+                                            )
+                                        },
+                                        *st.session_state['historial']
+                                    ]
+                                )
+                                res_text = respuesta.choices[0].message.content
+                                
+                                # VALIDAR SI EL MODELO DETECTÓ SABOTAJE EXPLÍCITO
+                                if "[BLOQUEAR_USUARIO]" in res_text:
+                                    st.session_state['bloqueado'] = True
+                                    st.rerun()
+                                else:
+                                    st.write(res_text)
+                                    st.session_state['historial'].append({"role": "assistant", "content": res_text})
+                            except Exception as e:
+                                st.error(f"Problema temporal de conexión: {e}")
+                else:
+                    st.warning("API Key no configurada.")
 else:
     st.info("👆 Por favor, completa el formulario superior para que Alonso conozca tu perfil y comience tu asesoría.")
