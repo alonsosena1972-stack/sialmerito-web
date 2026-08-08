@@ -12,7 +12,7 @@ str_app.set_page_config(
     page_icon="🚀"
 )
 
-# Estilos CSS con franja superior verde, sidebar azul cielo y diseño pro
+# Estilos CSS incluyendo la franja del chat input en verde institucional
 str_app.markdown("""
     <style>
     .stApp {
@@ -26,6 +26,16 @@ str_app.markdown("""
     
     .block-container {
         padding-top: 2rem !important;
+        background-color: #0D1117 !important;
+    }
+    
+    /* Bloque superior en verde */
+    div.block-container > div:first-child {
+        background-color: #238636 !important;
+        padding: 30px !important;
+        border-radius: 12px !important;
+        margin-bottom: 25px !important;
+        border-bottom: 2px solid #161B22 !important;
     }
     
     [data-testid="stSidebar"] {
@@ -44,19 +54,18 @@ str_app.markdown("""
     .main-title {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
-        color: #00D4B2 !important;
+        color: #FFFFFF !important;
         font-size: 2.6rem;
         text-align: center;
         margin-bottom: 5px;
         letter-spacing: -0.5px;
-        text-shadow: 0 0 15px rgba(0, 212, 178, 0.4);
     }
     .subtitle {
         font-family: 'Inter', sans-serif;
-        color: #38BDF8 !important;
+        color: #E2E8F0 !important;
         font-size: 1.15rem;
         text-align: center;
-        margin-bottom: 35px;
+        margin-bottom: 0px;
         font-weight: 500;
     }
     
@@ -75,6 +84,18 @@ str_app.markdown("""
         border-radius: 12px !important;
         padding: 15px !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Franja inferior del chat input de color verde */
+    [data-testid="stChatInput"] {
+        background-color: #238636 !important;
+        padding: 10px !important;
+        border-radius: 12px !important;
+        border: 2px solid #00D4B2 !important;
+    }
+    [data-testid="stChatInput"] textarea {
+        background-color: #0D1117 !important;
+        color: #FFFFFF !important;
     }
 
     .footer-institucional {
@@ -289,14 +310,14 @@ if form_abierto:
 
 str_app.write("---")
 
-# 7. AGENTE ALONSOBOT (Cerebro Completo con servicios avanzados y respaldo de expertos)
+# 7. AGENTE ALONSOBOT (Cerebro Completo con saludo actualizado)
 if str_app.session_state['usuario_nombre']:
     nombre_corto = str_app.session_state['usuario_nombre'].split()[0]
     
     if str_app.session_state['bloqueado']:
         str_app.error("🚫 Lo sentimos, debido a lenguaje inapropiado o intentos de sabotaje, tu acceso al chat ha sido suspendido permanentemente. Comunícate directamente con la dirección si consideras que es un error.")
     else:
-        str_app.success(f"🤖 **AlonsoBot (Asesor <span class='texto-verde'>SÍ AL MÉRITO</span>):** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
+        str_app.success(f"🤖 **Soy Alonsobot tu Asesor especializado de <span class='texto-verde'>SÍ AL MÉRITO</span>.** ¡Hola, **{nombre_corto}**! Preparándonos para el nivel **{str_app.session_state['usuario_nivel']}** en **{str_app.session_state['usuario_concurso']}**. ¿Cuál es tu consulta hoy?")
         
         for chat in str_app.session_state['historial']:
             with str_app.chat_message(chat["role"]):
@@ -358,7 +379,7 @@ if str_app.session_state['usuario_nombre']:
                                         {
                                             "role": "system", 
                                             "content": (
-                                                f"Eres AlonsoBot, el asesor experto de la empresa 'SÍ AL MÉRITO' dirigida por César Padilla. "
+                                                f"Eres Alonsobot, el asesor especializado de la empresa 'SÍ AL MÉRITO' dirigida por César Padilla. "
                                                 f"Somos un equipo de trabajo altamente profesional, ganadores de varios concursos de carrera administrativa (incluyendo Unidad de Víctimas, Ministerio del Trabajo, entre otros).\n\n"
                                                 f"TU BASE DE CONOCIMIENTO Y NORMATIVIDAD:\n"
                                                 f"- Asesoras rigurosamente sobre concursos de la CNSC (https://www.cnsc.gov.co) y plataforma SIMO, Procuraduría, Fiscalía, Contraloría, Ministerio del Trabajo y universidades aliadas (como U. de Antioquia, ESAP, etc.).\n"
