@@ -65,12 +65,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 2. CONEXIÓN SEGURA A OPENAI Y VARIABLES DE CONTACTO Y RECURSOS
+# 2. ENLACES OFICIALES Y RECURSOS DE SÍ AL MÉRITO
 TEL_1 = "573146715497"
 TEL_2 = "573004417737"
 ENLACE_GRUPO = "https://chat.whatsapp.com/HSjyh6FKsHb6mTdIkhAeaU?s=sh&p=a&ilr=4"
 WEB_URL = "https://sialmerito-web-bdo27kw6gkkzbg8psnzqx.streamlit.app"
-WORDWALL_GRATIS = "https://wordwall.net/es/resource/..." # Reemplaza o deja enlace base
+ENLACE_FACEBOOK = "https://www.facebook.com/share/1EgsN9D31Z/"
+ENLACE_WORDWALL = "https://wordwall.net/es/myactivities"
+
 client = None
 
 try:
@@ -165,7 +167,7 @@ if form_abierto:
 
 st.write("---")
 
-# 7. AGENTE ALONSO (Cerebro Recargado: Pack $120k, Wordwall, Anti-Trolls y Enlaces Directos)
+# 7. AGENTE ALONSO (Cerebro Completo: Pack $120k, Wordwall, Facebook, Anti-Trolls y Enlaces)
 if st.session_state['usuario_nombre']:
     nombre_corto = st.session_state['usuario_nombre'].split()[0]
     
@@ -180,7 +182,7 @@ if st.session_state['usuario_nombre']:
                 st.markdown(chat["content"])
 
         # Entrada de chat
-        prompt = st.chat_input("Escribe tu consulta sobre la CNSC, OPEC o simulacros...")
+        prompt = st.chat_input("Escribe tu consulta sobre la CNSC, OPEC, simulacros o redes...")
 
         if prompt:
             # FILTRO ANTI-TROLLS / SABOTAJE LOCAL RÁPIDO
@@ -194,23 +196,27 @@ if st.session_state['usuario_nombre']:
             with st.chat_message("user"):
                 st.write(prompt)
 
-            # CIERRE A LA CUARTA PREGUNTA CON DETALLE DE LOS SERVICIOS DE CÉSAR PADILLA
+            # CIERRE A LA CUARTA PREGUNTA CON DETALLE DE TODOS LOS CANALES Y SERVICIOS
             if st.session_state['contador'] > 4:
                 with st.chat_message("assistant"):
                     msg_cierre = (
                         f"¡Excelente recorrido, **{nombre_corto}**! Has completado tus 4 consultas de rigor para el nivel **{st.session_state['usuario_nivel']}**.\n\n"
                         f"🎯 **Da el salto definitivo al éxito con la Asesoría Personalizada de César Padilla ($120.000 COP):**\n"
-                        f"- Entrega de materiales de lectura, normas y leyes completas en PDF.\n"
+                        f"- Materiales en PDF, normas y leyes completas.\n"
                         f"- Enlaces de videos exclusivos con expertos temáticos por OPEC.\n"
-                        f"- Simulacro avanzado de 50 preguntas ajustado a los ejes temáticos de tu OPEC.\n"
-                        f"- Acceso a simulacros VIP en Wordwall (también tenemos versiones gratuitas).\n\n"
-                        f"🔗 **Comparte y entra a la plataforma:** {WEB_URL}"
+                        f"- Simulacro avanzado de 50 preguntas ajustado a los ejes temáticos de tu OPEC.\n\n"
+                        f"🔗 **Explora más recursos y comunidad oficial:**\n"
+                        f"- Simulacros Gratuitos y VIP en Wordwall: [Acceder a Wordwall]({ENLACE_WORDWALL})\n"
+                        f"- Síguenos en nuestra página de Facebook: [Visitar Facebook]({ENLACE_FACEBOOK})"
                     )
                     st.markdown(msg_cierre)
                     
-                    texto_wa = f"Hola César, soy {st.session_state['usuario_nombre']}. Terminé mis consultas con Alonso para el nivel {st.session_state['usuario_nivel']} ({st.session_state['usuario_concurso']}) y quiero adquirir mi Asesoría Personalizada de $120.000."
+                    texto_wa = f"Hola César, soy {st.session_state['usuario_nombre']}. Terminé mis consultas con Alonso para el nivel {st.session_state['usuario_nivel']} ({st.session_state['usuario_concurso']}) y quiero asegurar mi plaza con tu asesoría."
                     
                     st.link_button("👥 Unirme al Grupo Oficial de WhatsApp", ENLACE_GRUPO, use_container_width=True)
+                    st.link_button("📘 Visitar Nuestra Página de Facebook", ENLACE_FACEBOOK, use_container_width=True)
+                    st.link_button("🎯 Ir a Simulacros Wordwall (VIP y Gratis)", ENLACE_WORDWALL, use_container_width=True)
+                    
                     c1, c2 = st.columns(2)
                     with c1: st.link_button("📲 Hablar con César (Línea 1)", f"https://wa.me/{TEL_1}?text={texto_wa}", use_container_width=True)
                     with c2: st.link_button("📲 Hablar con César (Línea 2)", f"https://wa.me/{TEL_2}?text={texto_wa}", use_container_width=True)
@@ -227,13 +233,13 @@ if st.session_state['usuario_nombre']:
                                         {
                                             "role": "system", 
                                             "content": (
-                                                "Eres Alonso, el asesor experto de 'SÍ AL MÉRITO' dirigido por César Padilla. Tu propósito es asesorar rigurosamente sobre "
-                                                "concursos de la CNSC, Ley 909, OPEC, juicios situacionales y normatividad.\n\n"
-                                                "REGLAS CRÍTICAS DE COMPORTAMIENTO:\n"
-                                                "1. FILTRO DE SALUDOS/TROLLEO: Si te escriben saludos vacíos ('hola'), responde cordialmente invitandole a hacer su consulta técnica. Si detectas insultos, lenguaje obsceno, vulgaridades o intentos de sabotaje, incluye en tu respuesta la palabra clave [BLOQUEAR_USUARIO] para que el sistema lo expulse.\n"
-                                                "2. NUNCA DIGAS 've a la página de la CNSC' de forma genérica: Proporciona siempre el enlace oficial de la CNSC (https://www.cnsc.gov.co) o el vínculo exacto relacionado con SIMO y convocatorias cuando pregunten por fechas y procesos.\n"
-                                                "3. PROMOCIÓN DE SERVICIOS: Cuando sea oportuno, recuerda que la Asesoría Personalizada de César Padilla cuesta $120.000 COP e incluye PDFs normativos, videos de YouTube por OPEC, y simulacros especializados. Menciona también los simulacros interactivos en Wordwall (gratuitos y VIP por $20.000 COP).\n"
-                                                "4. Mantén tono profesional, experto, persuasivo y directo."
+                                                f"Eres Alonso, el asesor experto de 'SÍ AL MÉRITO' dirigido por César Padilla. Tu propósito es asesorar rigurosamente sobre "
+                                                f"concursos de la CNSC, Ley 909, OPEC, juicios situacionales y normatividad.\n\n"
+                                                f"REGLAS CRÍTICAS DE COMPORTAMIENTO:\n"
+                                                f"1. FILTRO DE SALUDOS/TROLLEO: Si te escriben saludos vacíos ('hola'), responde cordialmente invitandole a hacer su consulta técnica. Si detectas insultos, lenguaje obsceno o intentos de sabotaje, incluye la palabra clave [BLOQUEAR_USUARIO].\n"
+                                                f"2. NUNCA DIGAS 've a la página de la CNSC' de forma genérica: Proporciona siempre el enlace oficial de la CNSC (https://www.cnsc.gov.co) o SIMO.\n"
+                                                f"3. PROMOCIÓN DE RECURSOS: Cuando pregunten por simulacros, recuérdales que tenemos versiones gratuitas y simulacros VIP por $20.000 COP en nuestra plataforma Wordwall ({ENLACE_WORDWALL}). Cuando pregunten por información, notas o contenidos recientes, recuérdales que pueden visitar nuestra página de Facebook ({ENLACE_FACEBOOK}). Y menciona que la Asesoría Personalizada de César Padilla cuesta $120.000 COP e incluye PDFs normativos, videos de YouTube por OPEC y simulacros de 50 preguntas.\n"
+                                                f"4. Mantén tono profesional, experto, persuasivo y directo."
                                             )
                                         },
                                         *st.session_state['historial']
