@@ -47,27 +47,30 @@ st.markdown(
     .stApp,
     [data-testid="stAppViewContainer"],
     [data-testid="stMain"] {
-        background-color: var(--background-color, #f7fafc) !important;
+        background:
+            radial-gradient(circle at 8% 0%, rgba(14, 165, 233, 0.13), transparent 28%),
+            radial-gradient(circle at 95% 12%, rgba(16, 185, 129, 0.12), transparent 25%),
+            var(--background-color, #f7fafc) !important;
         color: var(--text-color, #111827) !important;
     }
 
     header[data-testid="stHeader"] {
-        background-color: var(--background-color, #f7fafc) !important;
+        background-color: transparent !important;
     }
 
     .block-container {
-        max-width: 1120px;
-        padding-top: 2rem !important;
-        padding-bottom: 3rem !important;
+        max-width: 1240px;
+        padding-top: 2.5rem !important;
+        padding-bottom: 3.5rem !important;
     }
 
     [data-testid="stSidebar"] {
-        background-color: var(--secondary-background-color, #eef2f7) !important;
-        border-right: 2px solid var(--primary-color, #0f766e) !important;
+        background: linear-gradient(180deg, #102a43 0%, #0f766e 100%) !important;
+        border-right: 3px solid #f4b942 !important;
     }
 
     [data-testid="stSidebar"] * {
-        color: var(--text-color, #111827) !important;
+        color: #ffffff !important;
     }
 
     h1, h2, h3, h4, h5, h6,
@@ -77,37 +80,67 @@ st.markdown(
 
     .main-title {
         font-family: Inter, Arial, sans-serif;
-        font-weight: 800;
+        font-weight: 900 !important;
         color: #047857 !important;
-        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-size: clamp(2.5rem, 6vw, 4.4rem) !important;
+        line-height: 1.05 !important;
         text-align: center;
-        margin-bottom: 0.25rem;
-        letter-spacing: -0.5px;
+        margin: 0.25rem 0 0.5rem 0;
+        letter-spacing: -1px;
+        text-shadow: 0 3px 18px rgba(4, 120, 87, 0.2);
     }
 
     .subtitle {
         font-family: Inter, Arial, sans-serif;
         color: #075985 !important;
-        font-size: clamp(1rem, 2vw, 1.2rem);
+        font-size: clamp(1.15rem, 2.4vw, 1.55rem) !important;
+        line-height: 1.45 !important;
         text-align: center;
+        margin: 0 auto 1rem auto;
+        font-weight: 700;
+        max-width: 980px;
+    }
+
+    .hero-strip {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
         margin: 0 auto 2rem auto;
-        font-weight: 600;
-        max-width: 850px;
+        padding: 1rem 1.25rem;
+        max-width: 1050px;
+        color: #ffffff !important;
+        background: linear-gradient(90deg, #0f766e 0%, #0369a1 52%, #b45309 100%);
+        border-radius: 14px;
+        font-size: 1.08rem;
+        font-weight: 800;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(3, 105, 161, 0.22);
     }
 
     .card-box {
         background-color: var(--secondary-background-color, #eef2f7) !important;
-        padding: 1.5rem;
-        border-radius: 14px;
-        border: 2px solid var(--primary-color, #0f766e) !important;
-        box-shadow: 0 8px 24px rgba(15, 118, 110, 0.14);
+        padding: 2.25rem 2.4rem;
+        border-radius: 18px;
+        border: 3px solid #0f766e !important;
+        box-shadow: 0 12px 32px rgba(15, 118, 110, 0.18);
+    }
+
+    .card-box h3 {
+        font-size: 1.6rem !important;
+        line-height: 1.35 !important;
+        color: #075985 !important;
     }
 
     [data-testid="stChatMessage"] {
         background-color: var(--secondary-background-color, #eef2f7) !important;
-        border: 1px solid var(--primary-color, #0f766e) !important;
-        border-radius: 12px !important;
-        padding: 0.8rem !important;
+        border: 2px solid #0f766e !important;
+        border-radius: 16px !important;
+        padding: 1.15rem 1.25rem !important;
+        margin-bottom: 0.8rem !important;
+        font-size: 1.08rem !important;
+        line-height: 1.65 !important;
     }
 
     [data-testid="stChatInput"] {
@@ -133,15 +166,15 @@ st.markdown(
 
     .footer-text {
         color: var(--text-color, #111827) !important;
-        opacity: 0.88;
-        font-size: 0.95rem;
-        line-height: 1.6;
+        opacity: 0.92;
+        font-size: 1.05rem;
+        line-height: 1.7;
     }
 
     .footer-contacto {
         color: #047857 !important;
-        font-weight: 600;
-        font-size: 0.95rem;
+        font-weight: 700;
+        font-size: 1.05rem;
         margin-top: 0.7rem;
     }
 
@@ -176,6 +209,40 @@ st.markdown(
     [data-testid="stChatInput"] textarea {
         color: var(--text-color, #111827) !important;
         -webkit-text-fill-color: var(--text-color, #111827) !important;
+        font-size: 1.12rem !important;
+        line-height: 1.5 !important;
+    }
+
+    div[data-baseweb="input"],
+    div[data-baseweb="textarea"],
+    div[data-baseweb="select"] > div {
+        min-height: 3.25rem !important;
+        border-radius: 10px !important;
+        border-width: 2px !important;
+    }
+
+    [data-testid="stChatInput"] textarea {
+        min-height: 3.5rem !important;
+        padding: 0.8rem 1rem !important;
+    }
+
+    [data-testid="stWidgetLabel"] p,
+    [data-testid="stWidgetLabel"] label,
+    [data-testid="stCheckbox"] label,
+    [data-testid="stSelectbox"] label {
+        font-size: 1.08rem !important;
+        font-weight: 700 !important;
+        line-height: 1.45 !important;
+    }
+
+    [data-testid="stCaptionContainer"] {
+        font-size: 1rem !important;
+    }
+
+    [data-testid="stAlert"] {
+        font-size: 1.08rem !important;
+        line-height: 1.55 !important;
+        border-radius: 12px !important;
     }
 
     div[data-baseweb="popover"],
@@ -192,11 +259,13 @@ st.markdown(
     .stDownloadButton > button {
         background: linear-gradient(135deg, #047857 0%, #0369a1 100%) !important;
         color: #ffffff !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
+        font-size: 1.08rem !important;
+        min-height: 3.25rem !important;
         border: none !important;
-        border-radius: 8px !important;
-        padding: 0.6rem 1.2rem;
-        box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25);
+        border-radius: 10px !important;
+        padding: 0.8rem 1.4rem;
+        box-shadow: 0 6px 16px rgba(4, 120, 87, 0.3);
     }
 
     .stButton > button:hover,
@@ -207,6 +276,19 @@ st.markdown(
 
     a {
         color: #075985 !important;
+    }
+
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] input {
+        font-size: 1.06rem !important;
+    }
+
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 {
+        font-weight: 900 !important;
     }
     </style>
     """,
@@ -441,6 +523,11 @@ st.markdown("<h1 class='main-title'>SÍ AL MÉRITO</h1>", unsafe_allow_html=True
 st.markdown(
     "<p class='subtitle'>Talleres, cursos y asesorías especializadas "
     "para conquistar tu empleo público</p>",
+    unsafe_allow_html=True,
+)
+st.markdown(
+    "<div class='hero-strip'>🚀 Orientación práctica · 📚 Preparación para concursos "
+    "· ⚖️ Mérito y empleo público</div>",
     unsafe_allow_html=True,
 )
 
